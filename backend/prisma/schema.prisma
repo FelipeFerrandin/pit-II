@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
@@ -9,4 +6,78 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model customer {
+  id_customer      BigInt             @id
+  name             String             @db.VarChar(100)
+  last_name        String             @db.VarChar(155)
+  complete_name    String             @db.VarChar(255)
+  email            String             @unique(map: "email_UNIQUE") @db.VarChar(255)
+  password         String             @db.VarChar(50)
+  birth_date       DateTime           @db.Date
+  phone_number     String             @db.VarChar(20)
+  active           String             @db.VarChar(3)
+  created_at       DateTime           @db.DateTime(0)
+  updated_at       DateTime           @db.DateTime(0)
+  customer_address customer_address[]
+  order            order[]
+}
+
+model order {
+  id_order      BigInt          @id @default(autoincrement())
+  id_customer   BigInt
+  status        String          @db.VarChar(50)
+  total         Decimal         @db.Decimal(15, 2)
+  active        String          @db.VarChar(3)
+  created_at    DateTime        @db.DateTime(0)
+  updated_at    DateTime        @db.DateTime(0)
+  customer      customer        @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_customer1")
+  order_product order_product[]
+
+  @@index([id_customer], map: "fk_order_customer1_idx")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model order_product {
+  id_product BigInt
+  id_order   BigInt
+  subtotal   Decimal @db.Decimal(15, 2)
+  quantity   Int
+  order      order   @relation(fields: [id_order], references: [id_order], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_order1")
+  product    product @relation(fields: [id_product], references: [id_product], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_product")
+
+  @@index([id_order], map: "fk_product_has_order_order1_idx")
+  @@index([id_product], map: "fk_product_has_order_product_idx")
+  @@ignore
+}
+
+model product {
+  id_product    BigInt          @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  price         Decimal         @db.Decimal(15, 2)
+  description   String          @db.VarChar(255)
+  quantity      Int
+  image_base64  String          @db.LongText
+  active        String          @db.VarChar(3)
+  created_at    DateTime        @db.DateTime(0)
+  update_at     DateTime        @db.DateTime(0)
+  order_product order_product[]
+}
+
+model customer_address {
+  id_customer_address Int      @id @default(autoincrement())
+  id_customer         BigInt
+  public_place        String   @db.VarChar(255)
+  district            String   @db.VarChar(100)
+  number              Int
+  city                String   @db.VarChar(100)
+  state               String   @db.VarChar(100)
+  country             String   @db.VarChar(100)
+  active              String   @db.VarChar(3)
+  created_at          DateTime @db.DateTime(0)
+  updated_at          DateTime @db.DateTime(0)
+  customer            customer @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_adress_customer1")
+
+  @@index([id_customer], map: "fk_customer_adress_customer1_idx")
 }
