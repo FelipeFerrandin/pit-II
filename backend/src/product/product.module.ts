@@ -8,11 +8,11 @@ import { ProductService } from "./product.service";
   controllers: [ProductController],
   providers: [
     {
-      provide: "ProductRepository",
+      provide: "IProductRepository",
       useClass: ProductRepository
     },
     {
-      provide: "ProductService",
+      provide: "IProductService",
       useClass: ProductService
     }]
 })

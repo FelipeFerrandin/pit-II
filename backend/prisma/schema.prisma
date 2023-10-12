@@ -1,6 +1,5 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -9,7 +8,7 @@ datasource db {
 }
 
 model customer {
-  id_customer      BigInt             @id
+  id_customer      BigInt             @id @default(autoincrement())
   name             String             @db.VarChar(100)
   last_name        String             @db.VarChar(155)
   complete_name    String             @db.VarChar(255)
@@ -20,8 +19,6 @@ model customer {
   active           String             @db.VarChar(3)
   created_at       DateTime           @db.DateTime(0)
   updated_at       DateTime           @db.DateTime(0)
-  customer_address customer_address[]
-  order            order[]
 }
 
 model order {
@@ -32,24 +29,14 @@ model order {
   active        String          @db.VarChar(3)
   created_at    DateTime        @db.DateTime(0)
   updated_at    DateTime        @db.DateTime(0)
-  customer      customer        @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_customer1")
-  order_product order_product[]
-
-  @@index([id_customer], map: "fk_order_customer1_idx")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model order_product {
-  id_product BigInt
-  id_order   BigInt
-  subtotal   Decimal @db.Decimal(15, 2)
-  quantity   Int
-  order      order   @relation(fields: [id_order], references: [id_order], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_order1")
-  product    product @relation(fields: [id_product], references: [id_product], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_product")
-
-  @@index([id_order], map: "fk_product_has_order_order1_idx")
-  @@index([id_product], map: "fk_product_has_order_product_idx")
-  @@ignore
+  id_order_product      BigInt   @id @default(autoincrement())
+  id_product            BigInt
+  id_order              BigInt
+  subtotal              Decimal  @db.Decimal(15, 2)
+  quantity              Int
 }
 
 model product {
@@ -62,7 +49,6 @@ model product {
   active        String          @db.VarChar(3)
   created_at    DateTime        @db.DateTime(0)
   update_at     DateTime        @db.DateTime(0)
-  order_product order_product[]
 }
 
 model customer_address {
@@ -77,7 +63,4 @@ model customer_address {
   active              String   @db.VarChar(3)
   created_at          DateTime @db.DateTime(0)
   updated_at          DateTime @db.DateTime(0)
-  customer            customer @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_adress_customer1")
-
-  @@index([id_customer], map: "fk_customer_adress_customer1_idx")
 }

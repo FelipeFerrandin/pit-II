@@ -1,6 +1,6 @@
 enum YesNo {
     SIM = "Sim",
-    NAO = "Nao"
+    NAO = "Não"
 }
 
 export {
