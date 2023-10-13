@@ -15,7 +15,7 @@ export interface ICustomerAddressRepository {
 
   update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void>;
 
-  delete(aIdCustomer: number): Promise<void>;
+  delete(aIdCustomerAddress: number): Promise<void>;
 }
 
 @Injectable()
@@ -76,14 +76,14 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
     });
   }
 
-  async delete(aIdCustomer: number): Promise<void> {
+  async delete(aIdCustomerAddress: number): Promise<void> {
     this.mPrismaDatabase.customer_address.update({
       data: {
         updated_at: moment().toDate(),
         active: YesNo.NAO
       },
       where: {
-        id_customer_address: aIdCustomer
+        id_customer_address: aIdCustomerAddress
       }
     });
   }
