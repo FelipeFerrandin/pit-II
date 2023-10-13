@@ -1,40 +1,46 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ICustomerRepository } from "./customer.repository";
-import { CustomerCreateDTO, CustomerDTO, CustomerUpdateDTO } from "./customer.dto";
+import { CustomerCreateCompleteDTO, CustomerCreateDTO, CustomerDTO, CustomerUpdateDTO } from "./customer.dto";
 import { EntityNotFoundException } from "../framework/error/EntityNotFoundException";
 import moment from "moment";
 import { EncryptionUtil } from "../framework/util/EncryptionUtil";
 import { BusinessRuleException } from "../framework/error/BusinessRuleException";
+import { ICustomerAddressService } from "../customerAdress/customerAddress.service";
 
 
 export interface ICustomerService {
   findById(aIdCustomer: number): Promise<CustomerDTO>;
 
-  create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void>;
+  createComplete(aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO): Promise<void>;
 
   update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void>;
 
   updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<void>;
 
-  deleteAccount(aIdCustomer: number): Promise<void>;
+  delete(aIdCustomer: number): Promise<void>;
 }
 
 @Injectable()
 export class CustomerService implements ICustomerService {
 
   constructor(
-    @Inject("ICustomerRepository") private readonly mCustomerRepository: ICustomerRepository
+    @Inject("ICustomerRepository") private readonly mCustomerRepository: ICustomerRepository,
+    @Inject("ICustomerAddressService") private readonly mCustomerAddressService: ICustomerAddressService
   ) {
   }
 
-  async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void> {
-    // TODO create complete
-    return Promise.resolve(undefined);
+  private async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void> {
+    return this.mCustomerRepository.create(aCustomerCreateDTO);
   }
 
-  async deleteAccount(aIdCustomer: number): Promise<void> {
+  async createComplete(aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO): Promise<void> {
+    await this.create(aCustomerCreateCompleteDTO.customer);
+    await this.mCustomerAddressService.create(aCustomerCreateCompleteDTO.address);
+  }
+
+  async delete(aIdCustomer: number): Promise<void> {
     await this.findById(aIdCustomer);
-    return this.mCustomerRepository.deleteAccount(aIdCustomer);
+    return this.mCustomerRepository.delete(aIdCustomer);
   }
 
   async findById(aIdCustomer: number): Promise<CustomerDTO> {
@@ -54,8 +60,7 @@ export class CustomerService implements ICustomerService {
   }
 
   async update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void> {
-    // TODO create complete ?
-    return Promise.resolve(undefined);
+    return this.mCustomerRepository.update(aCustomerUpdateDTO);
   }
 
   async updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<void> {

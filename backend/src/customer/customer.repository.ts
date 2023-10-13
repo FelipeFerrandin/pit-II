@@ -15,7 +15,7 @@ export interface ICustomerRepository {
 
   updatePassword(aIdCustomer: number, aPassword: string): Promise<void>;
 
-  deleteAccount(aIdCustomer: number): Promise<void>;
+  delete(aIdCustomer: number): Promise<void>;
 }
 
 @Injectable()
@@ -40,7 +40,7 @@ export class CustomerRepository implements ICustomerRepository {
     });
   }
 
-  async deleteAccount(aIdCustomer: number): Promise<void> {
+  async delete(aIdCustomer: number): Promise<void> {
     this.mPrismaDatabase.customer.update({
       data: {
         updated_at: moment().toDate(),

@@ -1,4 +1,5 @@
-import { IsNotEmpty, MaxLength, Min } from "class-validator";
+import { IsNotEmpty, MaxLength, Min, ValidateNested } from "class-validator";
+import { CustomerAddressCreateDTO } from "../customerAdress/customerAddress.dto";
 
 class CustomerDTO {
   id_customer: bigint;
@@ -8,6 +9,13 @@ class CustomerDTO {
   email: string;
   birth_date: string;
   phone_number: string;
+}
+
+class CustomerCreateCompleteDTO {
+  @ValidateNested()
+  customer: CustomerCreateDTO;
+  @ValidateNested()
+  address: CustomerAddressCreateDTO;
 }
 
 class CustomerCreateDTO {
@@ -57,8 +65,20 @@ class CustomerUpdateDTO {
   phone_number: string;
 }
 
+class CustomerUpdatePasswordDTO {
+  @IsNotEmpty({ message: "Old password place is invalid" })
+  @MaxLength(50, { message: "Old password place is too long" })
+  old_password : string
+
+  @IsNotEmpty({ message: "New password place is invalid" })
+  @MaxLength(50, { message: "New password place is too long" })
+  new_password : string
+}
+
 export {
   CustomerCreateDTO,
   CustomerUpdateDTO,
-  CustomerDTO
+  CustomerDTO,
+  CustomerCreateCompleteDTO,
+  CustomerUpdatePasswordDTO
 };
