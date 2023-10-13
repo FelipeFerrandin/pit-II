@@ -1,10 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from "@nestjs/common";
+import helmet from "helmet";
+import { getCorsConfig } from "./framework/cors/CorsConfig";
+import * as compression from 'compression';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  const lApp = await NestFactory.create(AppModule);
+  lApp.useGlobalPipes(new ValidationPipe());
+
+  //Security
+  lApp.use(helmet())
+  lApp.enableCors(getCorsConfig())
+
+  //Compress
+  lApp.use(compression())
+
+
+  await lApp.listen(3000);
 }
 bootstrap();

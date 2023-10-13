@@ -48,7 +48,7 @@ model product {
   image_base64  String          @db.LongText
   active        String          @db.VarChar(3)
   created_at    DateTime        @db.DateTime(0)
-  update_at     DateTime        @db.DateTime(0)
+  updated_at     DateTime        @db.DateTime(0)
 }
 
 model customer_address {

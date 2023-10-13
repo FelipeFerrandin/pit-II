@@ -13,9 +13,9 @@ class CustomerDTO {
 
 class CustomerCreateCompleteDTO {
   @ValidateNested()
-  customer: CustomerCreateDTO;
+  customer: CustomerCreateDTO = new CustomerCreateDTO();
   @ValidateNested()
-  address: CustomerAddressCreateDTO;
+  address: CustomerAddressCreateDTO = new CustomerAddressCreateDTO();
 }
 
 class CustomerCreateDTO {
@@ -68,11 +68,11 @@ class CustomerUpdateDTO {
 class CustomerUpdatePasswordDTO {
   @IsNotEmpty({ message: "Old password place is invalid" })
   @MaxLength(50, { message: "Old password place is too long" })
-  old_password : string
+  old_password: string;
 
   @IsNotEmpty({ message: "New password place is invalid" })
   @MaxLength(50, { message: "New password place is too long" })
-  new_password : string
+  new_password: string;
 }
 
 export {
