@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { OrderProductRepository } from "./orderProduct.repository";
 import { OrderProductService } from "./orderProduct.service";
 
+@Global()
 @Module({
   imports: [],
   providers: [

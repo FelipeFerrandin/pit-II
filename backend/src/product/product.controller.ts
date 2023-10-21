@@ -19,7 +19,7 @@ export class ProductController {
   }
 
   @Get("/:aIdProduct")
-  getById(@Param("aIdProduct") aIdProduct: number) {
+  getById(@Param("aIdProduct") aIdProduct: bigint) {
     return this.mProductService.getById(aIdProduct);
   }
 

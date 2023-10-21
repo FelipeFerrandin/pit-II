@@ -8,8 +8,8 @@ import { ProductModule } from "./product/product.module";
 @Module({
   imports: [
     PrismaModule,
-    CustomerModule,
     CustomerAddressModule,
+    CustomerModule,
     OrderProductModule,
     ProductModule
   ]

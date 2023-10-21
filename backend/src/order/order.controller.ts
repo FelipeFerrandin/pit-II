@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from "@nestjs/common";
+import { Controller, Inject } from "@nestjs/common";
 import { IOrderService } from "./order.service";
 
 @Controller()
@@ -8,8 +8,4 @@ export class OrderController {
   ) {
   }
 
-  @Get()
-  getHello(): string {
-    return this.mOrderService.getHello();
-  }
 }

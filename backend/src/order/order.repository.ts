@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../framework/database/PrismaService";
 import { YesNo } from "../framework/constants/ApplicationConstants";
-import moment from "moment";
 import { OrderEnum } from "./order.enum";
 import { order as Order } from "@prisma/client";
 
 export interface IOrderRepository {
-  create(aIdCustomer: bigint): Promise<Order>
-  finish(aIdCustomer: bigint, aTotal: number): Promise<void>
+  create(aIdCustomer: bigint): Promise<Order>;
+
+  finish(aIdCustomer: bigint, aTotal: number): Promise<void>;
 }
 
 @Injectable()
@@ -22,8 +22,8 @@ export class OrderRepository implements IOrderRepository {
         status: OrderEnum.PENDENTE.valueOf(),
         total: 0,
         active: YesNo.SIM,
-        created_at: moment().toDate(),
-        updated_at: moment().toDate()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     });
   }
@@ -35,8 +35,8 @@ export class OrderRepository implements IOrderRepository {
         status: OrderEnum.FINALIZADO.valueOf(),
         total: aTotal,
         active: YesNo.SIM,
-        created_at: moment().toDate(),
-        updated_at: moment().toDate()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     });
   }

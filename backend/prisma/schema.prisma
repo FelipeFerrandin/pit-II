@@ -13,7 +13,7 @@ model customer {
   last_name        String             @db.VarChar(155)
   complete_name    String             @db.VarChar(255)
   email            String             @unique(map: "email_UNIQUE") @db.VarChar(255)
-  password         String             @db.VarChar(50)
+  password         String             @db.VarChar(255)
   birth_date       DateTime           @db.Date
   phone_number     String             @db.VarChar(20)
   active           String             @db.VarChar(3)

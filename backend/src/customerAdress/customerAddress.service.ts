@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ICustomerAddressRepository } from "./customerAddress.repository";
 import { CustomerAddressCreateDTO, CustomerAddressDTO, CustomerAddressUpdateDTO } from "./customerAddress.dto";
 import { EntityNotFoundException } from "../framework/error/EntityNotFoundException";
+import { customer_address as CustomerAddress } from "@prisma/client";
 
 
 export interface ICustomerAddressService {
@@ -9,7 +10,7 @@ export interface ICustomerAddressService {
 
   getById(aIdCustomerAddress: number): Promise<CustomerAddressDTO>;
 
-  create(aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<void>;
+  create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<CustomerAddress>;
 
   update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void>;
 
@@ -39,8 +40,8 @@ export class CustomerAddressService implements ICustomerAddressService {
     });
   }
 
-  async create(aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<void> {
-    return this.mCustomerAddressRepository.create(aCustomerAddressCreateDTO);
+  async create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<CustomerAddress> {
+    return this.mCustomerAddressRepository.create(aIdCustomer, aCustomerAddressCreateDTO);
   }
 
   async delete(aIdCustomerAddress: number): Promise<void> {

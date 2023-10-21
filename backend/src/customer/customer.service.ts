@@ -2,10 +2,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ICustomerRepository } from "./customer.repository";
 import { CustomerCreateCompleteDTO, CustomerCreateDTO, CustomerDTO, CustomerUpdateDTO } from "./customer.dto";
 import { EntityNotFoundException } from "../framework/error/EntityNotFoundException";
-import moment from "moment";
 import { EncryptionUtil } from "../framework/util/EncryptionUtil";
 import { BusinessRuleException } from "../framework/error/BusinessRuleException";
 import { ICustomerAddressService } from "../customerAdress/customerAddress.service";
+import { customer as Customer } from "@prisma/client";
+import { TransactionManager } from "../framework/database/TransactionManager";
 
 
 export interface ICustomerService {
@@ -13,11 +14,11 @@ export interface ICustomerService {
 
   createComplete(aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO): Promise<void>;
 
-  update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void>;
+  update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<Customer>;
 
-  updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<void>;
+  updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<Customer>;
 
-  delete(aIdCustomer: number): Promise<void>;
+  delete(aIdCustomer: number): Promise<Customer>;
 }
 
 @Injectable()
@@ -25,20 +26,23 @@ export class CustomerService implements ICustomerService {
 
   constructor(
     @Inject("ICustomerRepository") private readonly mCustomerRepository: ICustomerRepository,
-    @Inject("ICustomerAddressService") private readonly mCustomerAddressService: ICustomerAddressService
+    @Inject("ICustomerAddressService") private readonly mCustomerAddressService: ICustomerAddressService,
+    private readonly mTransactionManager: TransactionManager
   ) {
   }
 
-  private async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void> {
+  private async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<Customer> {
     return this.mCustomerRepository.create(aCustomerCreateDTO);
   }
 
   async createComplete(aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO): Promise<void> {
-    await this.create(aCustomerCreateCompleteDTO.customer);
-    await this.mCustomerAddressService.create(aCustomerCreateCompleteDTO.address);
+    return this.mTransactionManager.run(async () => {
+      const lCustomer = await this.create(aCustomerCreateCompleteDTO.customer);
+      await this.mCustomerAddressService.create(lCustomer.id_customer, aCustomerCreateCompleteDTO.address);
+    });
   }
 
-  async delete(aIdCustomer: number): Promise<void> {
+  async delete(aIdCustomer: number): Promise<Customer> {
     await this.findById(aIdCustomer);
     return this.mCustomerRepository.delete(aIdCustomer);
   }
@@ -53,21 +57,20 @@ export class CustomerService implements ICustomerService {
       last_name: lCustomer.last_name,
       complete_name: lCustomer.complete_name,
       email: lCustomer.email,
-      birth_date: moment(lCustomer.birth_date).format("dd-MM-yyyy"),
+      birth_date: new Date(lCustomer.birth_date).toISOString(),
       phone_number: lCustomer.phone_number
     };
 
   }
 
-  async update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void> {
+  async update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<Customer> {
     return this.mCustomerRepository.update(aCustomerUpdateDTO);
   }
 
-  async updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<void> {
+  async updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<Customer> {
     const lCustomer = await this.mCustomerRepository.findById(aIdCustomer);
     if (lCustomer == null) throw new EntityNotFoundException(`Customer with ID ${aIdCustomer} was not found`);
-    const lDecryptedPassword = EncryptionUtil.decrypt(lCustomer.password);
-    if (aOldPassword != lDecryptedPassword) throw new BusinessRuleException("Password entered is invalid");
+    if (!(await EncryptionUtil.compare(aPassword, aOldPassword))) throw new BusinessRuleException("Password entered is invalid");
     return this.mCustomerRepository.updatePassword(aIdCustomer, aPassword);
   }
 

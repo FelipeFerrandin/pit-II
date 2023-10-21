@@ -1,15 +1,14 @@
-import CryptoJS from "crypto-js";
+import * as bcrypt from "bcrypt";
 
 export class EncryptionUtil {
-  static mKey = "Felipe";
+  static mKey = 7;
 
-  static encrypt(aPassword: string): string {
-    return CryptoJS.AES.encrypt(aPassword, this.mKey).toString();
+  static async encrypt(aPassword: string): Promise<string> {
+    return bcrypt.hash(aPassword, this.mKey);
   }
 
-  static decrypt(aPasswordEncrypted: string): string {
-    const lBytes = CryptoJS.AES.decrypt(aPasswordEncrypted, this.mKey);
-    return lBytes.toString(CryptoJS.enc.Utf8);
+  static async compare(aPassword: string, aPasswordEncrypted: string): Promise<boolean> {
+    return bcrypt.compare(aPassword, aPasswordEncrypted);
   }
 
 }

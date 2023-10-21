@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../framework/database/PrismaService";
 import { YesNo } from "../framework/constants/ApplicationConstants";
-import moment from "moment";
 import { customer_address as CustomerAddress } from "@prisma/client";
 import { CustomerAddressCreateDTO, CustomerAddressUpdateDTO } from "./customerAddress.dto";
 
@@ -11,7 +10,7 @@ export interface ICustomerAddressRepository {
 
   getById(aIdCustomerAddress: number): Promise<CustomerAddress | null>;
 
-  create(aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<void>;
+  create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO) : Promise<CustomerAddress>;
 
   update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void>;
 
@@ -42,18 +41,18 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
     );
   }
 
-  async create(aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<void> {
-    this.mPrismaDatabase.customer_address.create({
+  async create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<CustomerAddress> {
+    return this.mPrismaDatabase.customer_address.create({
       data: {
-        id_customer: aCustomerAddressCreateDTO.id_customer,
+        id_customer: aIdCustomer,
         public_place: aCustomerAddressCreateDTO.public_place,
         district: aCustomerAddressCreateDTO.district,
         number: aCustomerAddressCreateDTO.number,
         city: aCustomerAddressCreateDTO.city,
         state: aCustomerAddressCreateDTO.state,
         country: aCustomerAddressCreateDTO.country,
-        updated_at: moment().toDate(),
-        created_at: moment().toDate(),
+        updated_at: new Date(),
+        created_at: new Date(),
         active: YesNo.SIM
       }
     });
@@ -68,7 +67,7 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
         city: aCustomerAddressUpdateDTO.city,
         state: aCustomerAddressUpdateDTO.state,
         country: aCustomerAddressUpdateDTO.country,
-        updated_at: moment().toDate()
+        updated_at: new Date()
       },
       where: {
         id_customer_address: aCustomerAddressUpdateDTO.id_customer_address
@@ -79,7 +78,7 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
   async delete(aIdCustomerAddress: number): Promise<void> {
     this.mPrismaDatabase.customer_address.update({
       data: {
-        updated_at: moment().toDate(),
+        updated_at: new Date(),
         active: YesNo.NAO
       },
       where: {

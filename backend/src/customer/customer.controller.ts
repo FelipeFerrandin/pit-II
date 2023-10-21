@@ -32,9 +32,12 @@ export class CustomerController {
     return this.mCustomerService.createComplete(aCustomerCreateCompleteDTO);
   }
 
-  @Post("/address")
-  async createAddress(@Body() aCustomerAddressCreateDTO: CustomerAddressCreateDTO) {
-    return this.mCustomerAddressService.create(aCustomerAddressCreateDTO);
+  @Post("/address/:aIdCustomer")
+  async createAddress(
+    @Param("aIdCustomer") aIdCustomer: bigint,
+    @Body() aCustomerAddressCreateDTO: CustomerAddressCreateDTO
+  ) {
+    return this.mCustomerAddressService.create(aIdCustomer, aCustomerAddressCreateDTO);
   }
 
   @Put()

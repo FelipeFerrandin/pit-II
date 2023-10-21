@@ -3,19 +3,18 @@ import { PrismaService } from "../framework/database/PrismaService";
 import { customer as Customer } from "@prisma/client";
 import { CustomerCreateDTO, CustomerUpdateDTO } from "./customer.dto";
 import { YesNo } from "../framework/constants/ApplicationConstants";
-import moment from "moment/moment";
 import { EncryptionUtil } from "../framework/util/EncryptionUtil";
 
 export interface ICustomerRepository {
   findById(aIdCustomer: number): Promise<Customer | null>;
 
-  create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void>;
+  create(aCustomerCreateDTO: CustomerCreateDTO): Promise<Customer>;
 
-  update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void>;
+  update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<Customer>;
 
-  updatePassword(aIdCustomer: number, aPassword: string): Promise<void>;
+  updatePassword(aIdCustomer: number, aPassword: string): Promise<Customer>;
 
-  delete(aIdCustomer: number): Promise<void>;
+  delete(aIdCustomer: number): Promise<Customer>;
 }
 
 @Injectable()
@@ -23,27 +22,27 @@ export class CustomerRepository implements ICustomerRepository {
   constructor(private readonly mPrismaDatabase: PrismaService) {
   }
 
-  async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<void> {
-    this.mPrismaDatabase.customer.create({
+  async create(aCustomerCreateDTO: CustomerCreateDTO): Promise<Customer> {
+    return this.mPrismaDatabase.customer.create({
       data: {
         name: aCustomerCreateDTO.name,
         last_name: aCustomerCreateDTO.last_name,
         complete_name: `${aCustomerCreateDTO.name.trim()} ${aCustomerCreateDTO.last_name.trim()}`,
         email: aCustomerCreateDTO.email,
-        password: EncryptionUtil.encrypt(aCustomerCreateDTO.password),
-        birth_date: aCustomerCreateDTO.birth_date,
+        password: await EncryptionUtil.encrypt(aCustomerCreateDTO.password),
+        birth_date: new Date(aCustomerCreateDTO.birth_date).toISOString(),
         phone_number: aCustomerCreateDTO.phone_number,
-        updated_at: moment().toDate(),
-        created_at: moment().toDate(),
+        updated_at: new Date(),
+        created_at: new Date(),
         active: YesNo.SIM
       }
     });
   }
 
-  async delete(aIdCustomer: number): Promise<void> {
-    this.mPrismaDatabase.customer.update({
+  async delete(aIdCustomer: number): Promise<Customer> {
+    return this.mPrismaDatabase.customer.update({
       data: {
-        updated_at: moment().toDate(),
+        updated_at: new Date(),
         active: YesNo.NAO
       },
       where: {
@@ -62,15 +61,15 @@ export class CustomerRepository implements ICustomerRepository {
     );
   }
 
-  async update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<void> {
-    this.mPrismaDatabase.customer.update({
+  async update(aCustomerUpdateDTO: CustomerUpdateDTO): Promise<Customer> {
+    return this.mPrismaDatabase.customer.update({
       data: {
         name: aCustomerUpdateDTO.name,
         last_name: aCustomerUpdateDTO.last_name,
         complete_name: `${aCustomerUpdateDTO.name.trim()} ${aCustomerUpdateDTO.last_name.trim()}`,
-        birth_date: aCustomerUpdateDTO.birth_date,
+        birth_date: new Date(aCustomerUpdateDTO.birth_date).toISOString(),
         phone_number: aCustomerUpdateDTO.phone_number,
-        updated_at: moment().toDate()
+        updated_at: new Date()
       },
       where: {
         id_customer: aCustomerUpdateDTO.id_customer
@@ -78,11 +77,11 @@ export class CustomerRepository implements ICustomerRepository {
     });
   }
 
-  async updatePassword(aIdCustomer: number, aPassword: string): Promise<void> {
-    this.mPrismaDatabase.customer.update({
+  async updatePassword(aIdCustomer: number, aPassword: string): Promise<Customer> {
+    return this.mPrismaDatabase.customer.update({
       data: {
-        password: EncryptionUtil.encrypt(aPassword),
-        updated_at: moment().toDate()
+        password: await EncryptionUtil.encrypt(aPassword),
+        updated_at: new Date()
       },
       where: {
         id_customer: aIdCustomer

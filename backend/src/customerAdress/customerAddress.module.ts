@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { CustomerAddressRepository } from "./customerAddress.repository";
 import { CustomerAddressService } from "./customerAddress.service";
 
+@Global()
 @Module({
   imports: [],
   providers: [
@@ -12,7 +13,17 @@ import { CustomerAddressService } from "./customerAddress.service";
     {
       provide: "ICustomerAddressService",
       useClass: CustomerAddressService
-    }]
+    }],
+  exports: [
+    {
+      provide: "ICustomerAddressRepository",
+      useClass: CustomerAddressRepository
+    },
+    {
+      provide: "ICustomerAddressService",
+      useClass: CustomerAddressService
+    }
+  ]
 })
 export class CustomerAddressModule {
 }

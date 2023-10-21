@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../framework/database/PrismaService";
 import { product as Product } from "@prisma/client";
 import { YesNo } from "../framework/constants/ApplicationConstants";
-import moment from "moment/moment";
 import { ProductCreateDTO, ProductUpdateDTO } from "./product.dto";
 
 export interface IProductRepository {
@@ -55,8 +54,8 @@ export class ProductRepository implements IProductRepository {
         name: aProductCreateDTO.name,
         image_base64: aProductCreateDTO.image_base64,
         description: aProductCreateDTO.description,
-        updated_at: moment().toDate(),
-        created_at: moment().toDate(),
+        updated_at: new Date(),
+        created_at: new Date(),
         active: YesNo.SIM
       }
     });
@@ -67,7 +66,7 @@ export class ProductRepository implements IProductRepository {
     this.mPrismaDatabase.product.update({
       data: {
         quantity: aQuantity,
-        updated_at: moment().toDate(),
+        updated_at: new Date(),
         active: YesNo.SIM
       },
       where: {
@@ -84,7 +83,7 @@ export class ProductRepository implements IProductRepository {
         price: aProductCreateDTO.price,
         image_base64: aProductCreateDTO.image_base64,
         description: aProductCreateDTO.description,
-        updated_at: moment().toDate(),
+        updated_at: new Date(),
         active: YesNo.SIM
       },
       where: {
@@ -96,7 +95,7 @@ export class ProductRepository implements IProductRepository {
   async delete(aIdProduct: number): Promise<void> {
     this.mPrismaDatabase.product.update({
       data: {
-        updated_at: moment().toDate(),
+        updated_at: new Date(),
         active: YesNo.NAO
       },
       where: {

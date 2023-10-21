@@ -28,8 +28,6 @@ class CustomerAddressUpdateDTO {
 }
 
 class CustomerAddressCreateDTO {
-  @Min(1, { message: "Id customer is invalid" })
-  id_customer: number;
 
   @IsNotEmpty({ message: "Public place is invalid" })
   @MaxLength(255, { message: "Public place is too long" })

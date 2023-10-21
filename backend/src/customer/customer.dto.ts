@@ -13,9 +13,9 @@ class CustomerDTO {
 
 class CustomerCreateCompleteDTO {
   @ValidateNested()
-  customer: CustomerCreateDTO = new CustomerCreateDTO();
+  customer = new CustomerCreateDTO();
   @ValidateNested()
-  address: CustomerAddressCreateDTO = new CustomerAddressCreateDTO();
+  address = new CustomerAddressCreateDTO();
 }
 
 class CustomerCreateDTO {
