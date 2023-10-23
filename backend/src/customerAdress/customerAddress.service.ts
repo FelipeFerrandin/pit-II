@@ -12,9 +12,9 @@ export interface ICustomerAddressService {
 
   create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO): Promise<CustomerAddress>;
 
-  update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void>;
+  update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<CustomerAddress>;
 
-  delete(aIdCustomerAddress: number): Promise<void>;
+  delete(aIdCustomerAddress: number): Promise<CustomerAddress>;
 }
 
 @Injectable()
@@ -44,12 +44,12 @@ export class CustomerAddressService implements ICustomerAddressService {
     return this.mCustomerAddressRepository.create(aIdCustomer, aCustomerAddressCreateDTO);
   }
 
-  async delete(aIdCustomerAddress: number): Promise<void> {
+  async delete(aIdCustomerAddress: number): Promise<CustomerAddress> {
     await this.getById(aIdCustomerAddress);
     return this.mCustomerAddressRepository.delete(aIdCustomerAddress);
   }
 
-  async update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void> {
+  async update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<CustomerAddress> {
     await this.getById(aCustomerAddressUpdateDTO.id_customer_address);
     return this.mCustomerAddressRepository.update(aCustomerAddressUpdateDTO);
   }

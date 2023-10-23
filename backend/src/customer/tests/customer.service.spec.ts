@@ -20,8 +20,8 @@ describe("CustomerService", () => {
     expect(mICustomerService).toBeDefined();
   });
 
-  it("should create complete customer", () => {
-    expect(mICustomerService.createComplete({
+  it("should create complete customer", async () => {
+    await expect(mICustomerService.createComplete({
         address: {
           city: "Curitiba",
           number: 10,
@@ -34,7 +34,7 @@ describe("CustomerService", () => {
         customer: {
           password: "123",
           birth_date: "2002-02-07",
-          email: "test@test11.com",
+          email: "test@test1.com",
           name: "Felipe",
           last_name: "Ferrandin",
           phone_number: "419999999999"
@@ -45,12 +45,22 @@ describe("CustomerService", () => {
 
   it("should update customer", async () => {
     await expect(mICustomerService.update({
-        id_customer: 14,
-        name: "Felipe3",
-        last_name: "Ferrandin3",
+        id_customer: 1,
+        name: "Felipe4",
+        last_name: "Ferrandin4",
         birth_date: "2002-02-07",
         phone_number: "419999999999"
       })
+    ).resolves.not.toThrow();
+  });
+
+  it("should update password customer", async () => {
+    await expect(mICustomerService.updatePassword(1, "123", "12345")
+    ).resolves.not.toThrow();
+  });
+
+  it("should delete customer", async () => {
+    await expect(mICustomerService.delete(3)
     ).resolves.not.toThrow();
   });
 

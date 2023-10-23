@@ -21,7 +21,7 @@ export class OrderRepository implements IOrderRepository {
         id_customer: aIdCustomer,
         status: OrderEnum.PENDENTE.valueOf(),
         total: 0,
-        active: YesNo.SIM,
+        active: YesNo.Yes,
         created_at: new Date(),
         updated_at: new Date()
       }
@@ -34,7 +34,7 @@ export class OrderRepository implements IOrderRepository {
         id_customer: aIdCustomer,
         status: OrderEnum.FINALIZADO.valueOf(),
         total: aTotal,
-        active: YesNo.SIM,
+        active: YesNo.Yes,
         created_at: new Date(),
         updated_at: new Date()
       }

@@ -12,9 +12,9 @@ export interface ICustomerAddressRepository {
 
   create(aIdCustomer: bigint, aCustomerAddressCreateDTO: CustomerAddressCreateDTO) : Promise<CustomerAddress>;
 
-  update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void>;
+  update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<CustomerAddress>;
 
-  delete(aIdCustomerAddress: number): Promise<void>;
+  delete(aIdCustomerAddress: number): Promise<CustomerAddress>;
 }
 
 @Injectable()
@@ -26,7 +26,7 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
     return await this.mPrismaDatabase.customer_address.findMany({
       where: {
         id_customer: aIdCustomer,
-        active: YesNo.SIM
+        active: YesNo.Yes
       }
     });
   }
@@ -35,7 +35,7 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
     return await this.mPrismaDatabase.customer_address.findFirst({
         where: {
           id_customer_address: aIdCustomerAddress,
-          active: YesNo.SIM
+          active: YesNo.Yes
         }
       }
     );
@@ -53,13 +53,13 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
         country: aCustomerAddressCreateDTO.country,
         updated_at: new Date(),
         created_at: new Date(),
-        active: YesNo.SIM
+        active: YesNo.Yes
       }
     });
   }
 
-  async update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<void> {
-    this.mPrismaDatabase.customer_address.update({
+  async update(aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO): Promise<CustomerAddress> {
+    return this.mPrismaDatabase.customer_address.update({
       data: {
         public_place: aCustomerAddressUpdateDTO.public_place,
         district: aCustomerAddressUpdateDTO.district,
@@ -75,11 +75,11 @@ export class CustomerAddressRepository implements ICustomerAddressRepository {
     });
   }
 
-  async delete(aIdCustomerAddress: number): Promise<void> {
-    this.mPrismaDatabase.customer_address.update({
+  async delete(aIdCustomerAddress: number): Promise<CustomerAddress> {
+    return this.mPrismaDatabase.customer_address.update({
       data: {
         updated_at: new Date(),
-        active: YesNo.NAO
+        active: YesNo.No
       },
       where: {
         id_customer_address: aIdCustomerAddress

@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -19,24 +19,38 @@ model customer {
   active           String             @db.VarChar(3)
   created_at       DateTime           @db.DateTime(0)
   updated_at       DateTime           @db.DateTime(0)
+  customer_address customer_address[]
+  order            order[]
 }
 
 model order {
-  id_order      BigInt          @id @default(autoincrement())
-  id_customer   BigInt
-  status        String          @db.VarChar(50)
-  total         Decimal         @db.Decimal(15, 2)
-  active        String          @db.VarChar(3)
-  created_at    DateTime        @db.DateTime(0)
-  updated_at    DateTime        @db.DateTime(0)
+  id_order            BigInt           @id @default(autoincrement())
+  id_customer         BigInt
+  id_customer_address Int
+  status              String           @db.VarChar(50)
+  total               Decimal          @db.Decimal(15, 2)
+  active              String           @db.VarChar(3)
+  created_at          DateTime         @db.DateTime(0)
+  updated_at          DateTime         @db.DateTime(0)
+  customer            customer         @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_customer1")
+  customer_address    customer_address @relation(fields: [id_customer_address], references: [id_customer_address], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_customer_address1")
+  order_product       order_product[]
+
+  @@index([id_customer], map: "fk_order_customer1_idx")
+  @@index([id_customer_address], map: "fk_order_customer_address1_idx")
 }
 
 model order_product {
-  id_order_product      BigInt   @id @default(autoincrement())
-  id_product            BigInt
-  id_order              BigInt
-  subtotal              Decimal  @db.Decimal(15, 2)
-  quantity              Int
+  id_order_product BigInt  @id @default(autoincrement())
+  id_product       BigInt
+  id_order         BigInt
+  subtotal         Decimal @db.Decimal(15, 2)
+  quantity         Int
+  order            order   @relation(fields: [id_order], references: [id_order], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_order1")
+  product          product @relation(fields: [id_product], references: [id_product], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_has_order_product")
+
+  @@index([id_order], map: "fk_product_has_order_order1_idx")
+  @@index([id_product], map: "fk_product_has_order_product_idx")
 }
 
 model product {
@@ -48,7 +62,8 @@ model product {
   image_base64  String          @db.LongText
   active        String          @db.VarChar(3)
   created_at    DateTime        @db.DateTime(0)
-  updated_at     DateTime        @db.DateTime(0)
+  updated_at    DateTime        @db.DateTime(0)
+  order_product order_product[]
 }
 
 model customer_address {
@@ -63,4 +78,8 @@ model customer_address {
   active              String   @db.VarChar(3)
   created_at          DateTime @db.DateTime(0)
   updated_at          DateTime @db.DateTime(0)
+  customer            customer @relation(fields: [id_customer], references: [id_customer], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_adress_customer1")
+  order               order[]
+
+  @@index([id_customer], map: "fk_customer_adress_customer1_idx")
 }

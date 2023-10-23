@@ -70,7 +70,9 @@ export class CustomerService implements ICustomerService {
   async updatePassword(aIdCustomer: number, aOldPassword: string, aPassword: string): Promise<Customer> {
     const lCustomer = await this.mCustomerRepository.findById(aIdCustomer);
     if (lCustomer == null) throw new EntityNotFoundException(`Customer with ID ${aIdCustomer} was not found`);
-    if (!(await EncryptionUtil.compare(aPassword, aOldPassword))) throw new BusinessRuleException("Password entered is invalid");
+    const lCheckedPassword = !(await EncryptionUtil.compare(aOldPassword, lCustomer.password));
+    if (lCheckedPassword) throw new BusinessRuleException("Password entered is invalid");
+
     return this.mCustomerRepository.updatePassword(aIdCustomer, aPassword);
   }
 

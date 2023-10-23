@@ -31,7 +31,7 @@ export class ProductRepository implements IProductRepository {
         name: {
           contains: aNameProduct
         },
-        active: YesNo.SIM
+        active: YesNo.Yes
       }
     });
   }
@@ -40,7 +40,7 @@ export class ProductRepository implements IProductRepository {
     return await this.mPrismaDatabase.product.findFirst({
         where: {
           id_product: aIdProduct,
-          active: YesNo.SIM
+          active: YesNo.Yes
         }
       }
     );
@@ -56,7 +56,7 @@ export class ProductRepository implements IProductRepository {
         description: aProductCreateDTO.description,
         updated_at: new Date(),
         created_at: new Date(),
-        active: YesNo.SIM
+        active: YesNo.Yes
       }
     });
   }
@@ -67,7 +67,7 @@ export class ProductRepository implements IProductRepository {
       data: {
         quantity: aQuantity,
         updated_at: new Date(),
-        active: YesNo.SIM
+        active: YesNo.Yes
       },
       where: {
         id_product: aIdProduct
@@ -84,7 +84,7 @@ export class ProductRepository implements IProductRepository {
         image_base64: aProductCreateDTO.image_base64,
         description: aProductCreateDTO.description,
         updated_at: new Date(),
-        active: YesNo.SIM
+        active: YesNo.Yes
       },
       where: {
         id_product: aProductCreateDTO.id_product
@@ -96,7 +96,7 @@ export class ProductRepository implements IProductRepository {
     this.mPrismaDatabase.product.update({
       data: {
         updated_at: new Date(),
-        active: YesNo.NAO
+        active: YesNo.No
       },
       where: {
         id_product: aIdProduct

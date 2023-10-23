@@ -34,7 +34,7 @@ export class CustomerRepository implements ICustomerRepository {
         phone_number: aCustomerCreateDTO.phone_number,
         updated_at: new Date(),
         created_at: new Date(),
-        active: YesNo.SIM
+        active: YesNo.Yes
       }
     });
   }
@@ -43,7 +43,7 @@ export class CustomerRepository implements ICustomerRepository {
     return this.mPrismaDatabase.customer.update({
       data: {
         updated_at: new Date(),
-        active: YesNo.NAO
+        active: YesNo.No
       },
       where: {
         id_customer: aIdCustomer
@@ -55,7 +55,7 @@ export class CustomerRepository implements ICustomerRepository {
     return await this.mPrismaDatabase.customer.findFirst({
         where: {
           id_customer: aIdCustomer,
-          active: YesNo.SIM
+          active: YesNo.Yes
         }
       }
     );
