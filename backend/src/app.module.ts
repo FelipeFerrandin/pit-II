@@ -4,9 +4,11 @@ import { PrismaModule } from "./framework/database/PrismaModule";
 import { CustomerAddressModule } from "./customerAdress/customerAddress.module";
 import { OrderProductModule } from "./orderProduct/orderProduct.module";
 import { ProductModule } from "./product/product.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     PrismaModule,
     CustomerAddressModule,
     CustomerModule,

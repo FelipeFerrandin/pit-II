@@ -1,9 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { IOrderProductRepository } from "./orderProduct.repository";
+import { order_product as OrderProduct } from "@prisma/client";
 
 
 export interface IOrderProductService {
-  create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<void>;
+  create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<OrderProduct>;
 
   findProductsInOrderByIdOrder(aIdOrder: number): Promise<OrderProductDTO[]>;
 }
@@ -16,7 +17,7 @@ export class OrderProductService implements IOrderProductService {
   ) {
   }
 
-  async create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<void> {
+  async create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<OrderProduct> {
     return this.mOrderProductRepository.create(aIdOrder, aOrderProductCreateDTO);
   }
 

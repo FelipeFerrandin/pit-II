@@ -3,7 +3,7 @@ import { PrismaService } from "../framework/database/PrismaService";
 import { order_product as OrderProduct } from "@prisma/client";
 
 export interface IOrderProductRepository {
-  create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<void>;
+  create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<OrderProduct>;
 
   findProductsInOrderByIdOrder(aIdOrder: number): Promise<OrderProduct[]>;
 }
@@ -13,8 +13,8 @@ export class OrderProductRepository implements IOrderProductRepository {
   constructor(private readonly mPrismaDatabase: PrismaService) {
   }
 
-  async create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<void> {
-    this.mPrismaDatabase.order_product.create({
+  async create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<OrderProduct> {
+    return this.mPrismaDatabase.order_product.create({
       data: {
         id_order: aIdOrder,
         id_product: aOrderProductCreateDTO.id_product,

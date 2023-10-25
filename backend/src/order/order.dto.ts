@@ -1,4 +1,5 @@
 class OrderCreateDTO {
+  id_customer_address : number
   products: OrderCreateProductsDTO[];
 }
 

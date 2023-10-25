@@ -34,7 +34,7 @@ export class ProductController {
   }
 
   @Delete("/:aIdProduct")
-  delete(@Param("aIdProduct") aIdProduct: number) {
+  delete(@Param("aIdProduct") aIdProduct: bigint) {
     return this.mProductService.delete(aIdProduct);
   }
 

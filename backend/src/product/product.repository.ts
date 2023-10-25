@@ -9,13 +9,13 @@ export interface IProductRepository {
 
   getById(aIdProduct: bigint): Promise<Product | null>;
 
-  create(aProductCreateDTO: ProductCreateDTO): Promise<void>;
+  create(aProductCreateDTO: ProductCreateDTO): Promise<Product>;
 
-  updateQuantityById(aIdProduct: number, aQuantity: number): Promise<void>;
+  updateQuantityById(aIdProduct: bigint, aQuantity: number): Promise<Product>;
 
-  update(aProductCreateDTO: ProductUpdateDTO): Promise<void>;
+  update(aProductCreateDTO: ProductUpdateDTO): Promise<Product>;
 
-  delete(aIdProduct: number): Promise<void>;
+  delete(aIdProduct: bigint): Promise<Product>;
 }
 
 @Injectable()
@@ -46,8 +46,8 @@ export class ProductRepository implements IProductRepository {
     );
   }
 
-  async create(aProductCreateDTO: ProductCreateDTO): Promise<void> {
-    this.mPrismaDatabase.product.create({
+  async create(aProductCreateDTO: ProductCreateDTO): Promise<Product> {
+    return this.mPrismaDatabase.product.create({
       data: {
         price: aProductCreateDTO.price,
         quantity: aProductCreateDTO.quantity,
@@ -62,8 +62,8 @@ export class ProductRepository implements IProductRepository {
   }
 
 
-  async updateQuantityById(aIdProduct: number, aQuantity: number): Promise<void> {
-    this.mPrismaDatabase.product.update({
+  async updateQuantityById(aIdProduct: bigint, aQuantity: number): Promise<Product> {
+    return this.mPrismaDatabase.product.update({
       data: {
         quantity: aQuantity,
         updated_at: new Date(),
@@ -75,8 +75,8 @@ export class ProductRepository implements IProductRepository {
     });
   }
 
-  async update(aProductCreateDTO: ProductUpdateDTO): Promise<void> {
-    this.mPrismaDatabase.product.update({
+  async update(aProductCreateDTO: ProductUpdateDTO): Promise<Product> {
+    return this.mPrismaDatabase.product.update({
       data: {
         name: aProductCreateDTO.name,
         quantity: aProductCreateDTO.quantity,
@@ -92,8 +92,8 @@ export class ProductRepository implements IProductRepository {
     });
   }
 
-  async delete(aIdProduct: number): Promise<void> {
-    this.mPrismaDatabase.product.update({
+  async delete(aIdProduct: bigint): Promise<Product> {
+    return this.mPrismaDatabase.product.update({
       data: {
         updated_at: new Date(),
         active: YesNo.No

@@ -15,6 +15,15 @@ import { ProductService } from "./product.service";
     {
       provide: "IProductService",
       useClass: ProductService
+    }],
+  exports :  [
+    {
+      provide: "IProductRepository",
+      useClass: ProductRepository
+    },
+    {
+      provide: "IProductService",
+      useClass: ProductService
     }]
 })
 export class ProductModule {

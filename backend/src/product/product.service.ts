@@ -1,6 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { IProductRepository } from "./product.repository";
 import { ProductCreateDTO, ProductDTO, ProductUpdateDTO } from "./product.dto";
+import { product as Product } from "@prisma/client";
+import { BusinessRuleException } from "../framework/error/BusinessRuleException";
+import { EntityNotFoundException } from "../framework/error/EntityNotFoundException";
 
 
 export interface IProductService {
@@ -8,13 +11,13 @@ export interface IProductService {
 
   getById(aIdProduct: bigint): Promise<ProductDTO>;
 
-  create(aProductCreateDTO: ProductCreateDTO): Promise<void>;
+  create(aProductCreateDTO: ProductCreateDTO): Promise<Product>;
 
-  updateQuantityById(aIdProduct: number, aQuantity: number): Promise<void>;
+  updateQuantityById(aIdProduct: bigint, aQuantity: number): Promise<Product>;
 
-  update(aProductCreateDTO: ProductUpdateDTO): Promise<void>;
+  update(aProductCreateDTO: ProductUpdateDTO): Promise<Product>;
 
-  delete(aIdProduct: number): Promise<void>;
+  delete(aIdProduct: bigint): Promise<Product>;
 }
 
 @Injectable()
@@ -25,24 +28,30 @@ export class ProductService implements IProductService {
   ) {
   }
 
-  async create(aProductCreateDTO: ProductCreateDTO): Promise<void> {
+  async create(aProductCreateDTO: ProductCreateDTO): Promise<Product> {
     return this.mProductRepository.create(aProductCreateDTO);
   }
 
-  async delete(aIdProduct: number): Promise<void> {
+  async delete(aIdProduct: bigint): Promise<Product> {
+    await this.getById(aIdProduct)
     return this.mProductRepository.delete(aIdProduct);
   }
 
-  async update(aProductCreateDTO: ProductUpdateDTO): Promise<void> {
+  async update(aProductCreateDTO: ProductUpdateDTO): Promise<Product> {
+    await this.getById(aProductCreateDTO.id_product)
     return this.mProductRepository.update(aProductCreateDTO);
   }
 
-  async updateQuantityById(aIdProduct: number, aQuantity: number): Promise<void> {
+  async updateQuantityById(aIdProduct: bigint, aQuantity: number): Promise<Product> {
+    if (aQuantity < 0) throw new BusinessRuleException("Invalid quantity reported");
+    await this.getById(aIdProduct)
     return this.mProductRepository.updateQuantityById(aIdProduct, aQuantity);
   }
 
   async getById(aIdProduct: bigint): Promise<ProductDTO> {
     const lProduct = await this.mProductRepository.getById(aIdProduct);
+    if (lProduct == null) throw new EntityNotFoundException(`product not found with ID ${aIdProduct}`);
+
     return {
       id_product: lProduct.id_product,
       name: lProduct.name,
@@ -53,7 +62,7 @@ export class ProductService implements IProductService {
     };
   }
 
-  async listAll(aSkip: number, aTake: number, aNameProduct: string): Promise<ProductDTO[]> {
+  async listAll(aSkip: number, aTake: number, aNameProduct: string): Promise<ProductDTO[]> { //TODO objeto de paginacao
     const lListProduct = await this.mProductRepository.listAll(aSkip, aTake, aNameProduct);
     return lListProduct.map((iProduct) => <ProductDTO>{
       id_product: iProduct.id_product,

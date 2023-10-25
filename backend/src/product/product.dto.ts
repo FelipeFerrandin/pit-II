@@ -29,7 +29,7 @@ class ProductCreateDTO {
 
 class ProductUpdateDTO {
   @Min(1, { message: "Product id is invalid" })
-  id_product: number;
+  id_product: bigint;
 
   @IsNotEmpty({ message: "Name place is invalid" })
   @MaxLength(255, { message: "Name place is too long" })

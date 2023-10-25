@@ -5,9 +5,13 @@ import { OrderEnum } from "./order.enum";
 import { order as Order } from "@prisma/client";
 
 export interface IOrderRepository {
-  create(aIdCustomer: bigint): Promise<Order>;
+  create(aIdCustomer: bigint, aIdCustomerAddress: number): Promise<Order>;
 
-  finish(aIdCustomer: bigint, aTotal: number): Promise<void>;
+  updateTotalValue(aIdOrder: bigint, aTotal: number): Promise<Order>;
+
+  finish(aIdOrder: bigint): Promise<Order>;
+
+  findFinishPendingOrders(): Promise<Order[]>;
 }
 
 @Injectable()
@@ -15,11 +19,24 @@ export class OrderRepository implements IOrderRepository {
   constructor(private readonly mPrismaDatabase: PrismaService) {
   }
 
-  async create(aIdCustomer: bigint): Promise<Order> {
+  async updateTotalValue(aIdOrder: bigint, aTotal: number): Promise<Order> {
+    return this.mPrismaDatabase.order.update({
+      data: {
+        total: aTotal,
+        updated_at: new Date()
+      },
+      where: {
+        id_order: aIdOrder
+      }
+    });
+  }
+
+  async create(aIdCustomer: bigint, aIdCustomerAddress: number): Promise<Order> {
     return this.mPrismaDatabase.order.create({
       data: {
         id_customer: aIdCustomer,
         status: OrderEnum.PENDENTE.valueOf(),
+        id_customer_address: aIdCustomerAddress,
         total: 0,
         active: YesNo.Yes,
         created_at: new Date(),
@@ -28,15 +45,24 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async finish(aIdCustomer: bigint, aTotal: number): Promise<void> {
-    this.mPrismaDatabase.order.create({
+  async finish(aIdOrder: bigint): Promise<Order> {
+    return this.mPrismaDatabase.order.update({
       data: {
-        id_customer: aIdCustomer,
         status: OrderEnum.FINALIZADO.valueOf(),
-        total: aTotal,
         active: YesNo.Yes,
-        created_at: new Date(),
         updated_at: new Date()
+      },
+      where: {
+        id_order: aIdOrder
+      }
+    });
+  }
+
+  async findFinishPendingOrders(): Promise<Order[]> {
+    return this.mPrismaDatabase.order.findMany({
+      where: {
+        status: OrderEnum.PENDENTE,
+        active: YesNo.Yes
       }
     });
   }
