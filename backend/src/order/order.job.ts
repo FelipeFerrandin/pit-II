@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Cron } from "@nestjs/schedule";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { IOrderService } from "./order.service";
 
 @Injectable()
@@ -10,7 +10,7 @@ export class OrderJob {
   ) {
   }
 
-  @Cron("60 * * * * *")
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async finishPendingOrders() {
     await this.mOrderService.finishPendingOrders();
   }

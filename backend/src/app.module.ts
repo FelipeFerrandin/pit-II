@@ -5,6 +5,7 @@ import { CustomerAddressModule } from "./customerAdress/customerAddress.module";
 import { OrderProductModule } from "./orderProduct/orderProduct.module";
 import { ProductModule } from "./product/product.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { OrderModule } from "./order/order.module";
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { ScheduleModule } from "@nestjs/schedule";
     CustomerAddressModule,
     CustomerModule,
     OrderProductModule,
-    ProductModule
+    ProductModule,
+    OrderModule
   ]
 })
 export class AppModule {
