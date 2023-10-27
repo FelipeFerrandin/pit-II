@@ -62,7 +62,7 @@ export class ProductService implements IProductService {
     };
   }
 
-  async listAll(aSkip: number, aTake: number, aNameProduct: string): Promise<ProductDTO[]> { //TODO objeto de paginacao
+  async listAll(aSkip: number, aTake: number, aNameProduct: string): Promise<ProductDTO[]> { // TODO objeto de paginacao
     const lListProduct = await this.mProductRepository.listAll(aSkip, aTake, aNameProduct);
     return lListProduct.map((iProduct) => <ProductDTO>{
       id_product: iProduct.id_product,

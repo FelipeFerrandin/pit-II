@@ -6,6 +6,8 @@ export class OrderController {
   constructor(
     @Inject("IOrderService") private readonly mOrderService: IOrderService
   ) {
+
+    //TODO listagem de ordens realizadas
   }
 
 }
