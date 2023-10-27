@@ -38,4 +38,9 @@ describe("OrderService", () => {
     ).resolves.not.toThrow();
   });
 
+  it("should find finish pending orders", async () => {
+    await expect(mIOrderService.finishPendingOrders()
+    ).resolves.not.toThrow();
+  });
+
 });

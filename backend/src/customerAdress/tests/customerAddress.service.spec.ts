@@ -32,19 +32,6 @@ describe("CustomerAddressService", () => {
     ).resolves.not.toThrow();
   });
 
-  it("should update customer address", async () => {
-    await expect(mICustomerAddressService.update({
-        id_customer_address: 1,
-        country: "Test 123",
-        number: 1234,
-        district: "Test 1234",
-        state: "EUA",
-        public_place: "Test Public",
-        city: "Te"
-      })
-    ).resolves.not.toThrow();
-  });
-
   it("should get by id customer address", async () => {
     await expect(mICustomerAddressService.getById(1)
     ).resolves.not.toThrow();

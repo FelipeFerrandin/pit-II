@@ -19,8 +19,17 @@ describe("OrderProductService", () => {
     expect(mIOrderProductService).toBeDefined();
   });
 
-  it("should create product", async () => {
+  it("should find products in order", async () => {
     await expect(mIOrderProductService.findProductsInOrderByIdOrder(1)
+    ).resolves.not.toThrow();
+  });
+
+  it("should create order product", async () => {
+    await expect(mIOrderProductService.create(BigInt(1), {
+        quantity: 10,
+        id_product: BigInt(1),
+        subtotal: 10
+      })
     ).resolves.not.toThrow();
   });
 
