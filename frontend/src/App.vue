@@ -50,3 +50,18 @@ defineExpose({
   </v-app>
 </template>
 
+<style lang="scss">
+::-webkit-scrollbar {
+  width: 10px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFFF;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #54545400;
+}
+</style>
