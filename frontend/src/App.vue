@@ -25,7 +25,7 @@ defineExpose({
       <v-divider></v-divider>
       <v-list>
         <v-list-item
-          link
+          link href="/cart"
           prepend-icon="mdi-cart-outline"
           title="Carrinho"
         ></v-list-item>
@@ -40,8 +40,11 @@ defineExpose({
     <v-app-bar>
       <v-app-bar-nav-icon icon="mdi-menu" color="grey-lighten-5"
                           @click="drawerVisible = !drawerVisible"></v-app-bar-nav-icon>
-      <v-app-bar-title>Cupcake</v-app-bar-title>
+      <v-app-bar-title @click="this.$router.push('/');" style="cursor: pointer">Cupcake</v-app-bar-title>
       <v-spacer></v-spacer>
+      <template v-slot:append>
+        <v-btn icon="mdi-cart-outline" @click="this.$router.push('/cart');"></v-btn>
+      </template>
     </v-app-bar>
 
     <v-main>
