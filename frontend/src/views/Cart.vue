@@ -6,9 +6,9 @@ import lImageCupcake from "@/assets/pexels-photo-1055271.jpeg";
   <main>
     <v-container>
       <v-row>
-        <v-col cols="12" xs="9" sm="9" md="9" lg="9">
+        <v-col cols="12" xs="6" sm="6" md="6" lg="9">
           <v-card class="pa-3">
-            <div class="d-flex flex-no-wrap">
+            <div class="d-flex flex-wrap">
               <v-avatar
                 class="ma-3"
                 size="125"
@@ -19,10 +19,17 @@ import lImageCupcake from "@/assets/pexels-photo-1055271.jpeg";
 
               <div>
                 <v-card-title class="text-h5">
-                  Supermodel
+                  Cupcake jubileu conterraneo
                 </v-card-title>
 
-                <v-card-subtitle>Foster the People</v-card-subtitle>
+                <v-card-subtitle>
+                  <span>Feito de erva mate</span>
+                </v-card-subtitle>
+
+                <v-card-subtitle class="mt-1">
+                  <span>Quantity: 10</span>
+                </v-card-subtitle>
+
               </div>
 
               <v-card-actions class="ml-auto">
@@ -35,10 +42,30 @@ import lImageCupcake from "@/assets/pexels-photo-1055271.jpeg";
 
           </v-card>
         </v-col>
-        <v-col cols="12" xs="3" sm="3" md="3" lg="3">
-          <v-card title="This is a title"
-                  subtitle="This is a subtitle"
-          ></v-card>
+        <v-col cols="12" xs="6" sm="6" md="6" lg="3">
+          <v-card class="pa-4">
+            <div>
+              <v-card-title class="text-h5">
+                Resume
+              </v-card-title>
+
+              <v-card-subtitle class="my-3 d-flex justify-lg-space-between">
+                <span>Value of products:</span>
+                <span>R$ 10,99</span>
+              </v-card-subtitle>
+
+              <v-divider></v-divider>
+
+              <v-card-subtitle class="my-3 d-flex justify-lg-space-between">
+                <span>Total:</span>
+                <span>R$ 10,99</span>
+              </v-card-subtitle>
+
+              <div class="w-100">
+                <v-btn class="w-100" variant="tonal" @click="this.$router.push('/finishing-order');">Finish</v-btn>
+              </div>
+            </div>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
