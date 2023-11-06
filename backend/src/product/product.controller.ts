@@ -12,15 +12,15 @@ export class ProductController {
   @Get()
   listAll(
     @Query("productName") aProductName: string,
-    @Query("skip") aSkip: number,
-    @Query("take") aTake: number
+    @Query("skip") aSkip: string,
+    @Query("take") aTake: string
   ) {
-    return this.mProductService.listAll(aSkip, aTake, aProductName);
+    return this.mProductService.listAll(+aSkip, +aTake, aProductName);
   }
 
   @Get("/:aIdProduct")
-  getById(@Param("aIdProduct") aIdProduct: bigint) {
-    return this.mProductService.getById(aIdProduct);
+  getById(@Param("aIdProduct") aIdProduct: string) {
+    return this.mProductService.getById(BigInt(+aIdProduct));
   }
 
   @Post()

@@ -3,14 +3,13 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { aliases, mdi } from "vuetify/iconsets/mdi";
 
 // Vuetify
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-
 
 const app = createApp(App);
 
@@ -21,12 +20,12 @@ const vuetify = createVuetify({
   components,
   directives,
   icons: {
-    defaultSet: 'mdi',
+    defaultSet: "mdi",
     aliases,
     sets: {
-      mdi,
-    },
-  },
+      mdi
+    }
+  }
 });
 
 app.use(createPinia());

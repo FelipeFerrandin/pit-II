@@ -15,6 +15,8 @@ export interface ICustomerRepository {
   updatePassword(aIdCustomer: number, aPassword: string): Promise<Customer>;
 
   delete(aIdCustomer: number): Promise<Customer>;
+
+  findByEmail(aEmail: string): Promise<Customer>;
 }
 
 @Injectable()
@@ -85,6 +87,14 @@ export class CustomerRepository implements ICustomerRepository {
       },
       where: {
         id_customer: aIdCustomer
+      }
+    });
+  }
+
+  async findByEmail(aEmail: string): Promise<Customer> {
+    return this.mPrismaDatabase.customer.findUnique({
+      where: {
+        email: aEmail
       }
     });
   }

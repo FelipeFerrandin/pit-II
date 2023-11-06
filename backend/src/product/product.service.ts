@@ -53,7 +53,7 @@ export class ProductService implements IProductService {
     if (lProduct == null) throw new EntityNotFoundException(`product not found with ID ${aIdProduct}`);
 
     return {
-      id_product: lProduct.id_product,
+      id_product: Number(lProduct.id_product),
       name: lProduct.name,
       price: lProduct.price.toNumber(),
       description: lProduct.description,
@@ -65,7 +65,7 @@ export class ProductService implements IProductService {
   async listAll(aSkip: number, aTake: number, aNameProduct: string): Promise<ProductDTO[]> { // TODO objeto de paginacao
     const lListProduct = await this.mProductRepository.listAll(aSkip, aTake, aNameProduct);
     return lListProduct.map((iProduct) => <ProductDTO>{
-      id_product: iProduct.id_product,
+      id_product: Number(iProduct.id_product),
       name: iProduct.name,
       price: iProduct.price.toNumber(),
       description: iProduct.description,

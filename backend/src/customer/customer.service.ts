@@ -7,6 +7,7 @@ import { BusinessRuleException } from "../framework/error/BusinessRuleException"
 import { ICustomerAddressService } from "../customerAdress/customerAddress.service";
 import { customer as Customer } from "@prisma/client";
 import { TransactionManager } from "../framework/database/TransactionManager";
+import { IAuthService } from "../auth/auth.service";
 
 
 export interface ICustomerService {
@@ -27,6 +28,7 @@ export class CustomerService implements ICustomerService {
   constructor(
     @Inject("ICustomerRepository") private readonly mCustomerRepository: ICustomerRepository,
     @Inject("ICustomerAddressService") private readonly mCustomerAddressService: ICustomerAddressService,
+    @Inject("IAuthService") private readonly mAuthService: IAuthService,
     private readonly mTransactionManager: TransactionManager
   ) {
   }

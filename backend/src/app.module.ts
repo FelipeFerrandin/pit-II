@@ -6,6 +6,7 @@ import { OrderProductModule } from "./orderProduct/orderProduct.module";
 import { ProductModule } from "./product/product.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { OrderModule } from "./order/order.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { OrderModule } from "./order/order.module";
     PrismaModule,
     CustomerAddressModule,
     CustomerModule,
+    AuthModule,
     OrderProductModule,
     ProductModule,
     OrderModule

@@ -1,7 +1,7 @@
 import { IsDecimal, IsNotEmpty, MaxLength, Min } from "class-validator";
 
 class ProductDTO {
-  id_product: bigint;
+  id_product: number;
   name: string;
   price: number;
   description: string;
