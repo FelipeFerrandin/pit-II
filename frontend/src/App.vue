@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
+import { RouterView, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { useApplicationStore } from "@/stores/application";
 
 const lDrawerVisible = ref(false);
 const lStore = useApplicationStore();
 const lIsLogged = computed(() => lStore.getIsLogged);
+const lRouter = useRouter();
 
 function initLocalStorage() {
   if (!localStorage.getItem("cart")) {
@@ -14,8 +15,8 @@ function initLocalStorage() {
 }
 
 function logout() {
-  this.$router.push("/");
   lStore.logout();
+  lRouter.push({ path: "/" });
 }
 
 onMounted(() => {

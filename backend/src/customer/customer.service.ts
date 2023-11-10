@@ -8,6 +8,7 @@ import { ICustomerAddressService } from "../customerAdress/customerAddress.servi
 import { customer as Customer } from "@prisma/client";
 import { TransactionManager } from "../framework/database/TransactionManager";
 import { IAuthService } from "../auth/auth.service";
+import { YesNo } from "../framework/constants/ApplicationConstants";
 
 
 export interface ICustomerService {
@@ -51,10 +52,10 @@ export class CustomerService implements ICustomerService {
 
   async findById(aIdCustomer: number): Promise<CustomerDTO> {
     const lCustomer = await this.mCustomerRepository.findById(aIdCustomer);
-    if (lCustomer == null) throw new EntityNotFoundException(`Customer with ID ${aIdCustomer} was not found`);
+    if (lCustomer == null || lCustomer.active == YesNo.No) throw new EntityNotFoundException(`Customer with ID ${aIdCustomer} was not found`);
 
     return {
-      id_customer: lCustomer.id_customer,
+      id_customer: Number(lCustomer.id_customer),
       name: lCustomer.name,
       last_name: lCustomer.last_name,
       complete_name: lCustomer.complete_name,

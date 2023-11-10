@@ -1,6 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 
 class AuthDTO {
+  id_customer: number
   access_token: string;
 }
 

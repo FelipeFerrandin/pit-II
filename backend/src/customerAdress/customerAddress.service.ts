@@ -30,7 +30,7 @@ export class CustomerAddressService implements ICustomerAddressService {
 
     return lListCustomerAddress.map((iCustomerAddress) => <CustomerAddressDTO>{
       id_customer_address: iCustomerAddress.id_customer_address,
-      id_customer: iCustomerAddress.id_customer,
+      id_customer: Number(iCustomerAddress.id_customer),
       public_place: iCustomerAddress.public_place,
       district: iCustomerAddress.district,
       number: iCustomerAddress.number,
@@ -60,7 +60,7 @@ export class CustomerAddressService implements ICustomerAddressService {
 
     return {
       id_customer_address: lCustomerAddress.id_customer_address,
-      id_customer: lCustomerAddress.id_customer,
+      id_customer: Number(lCustomerAddress.id_customer),
       public_place: lCustomerAddress.public_place,
       district: lCustomerAddress.district,
       number: lCustomerAddress.number,

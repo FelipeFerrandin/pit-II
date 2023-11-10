@@ -20,11 +20,13 @@ export class AuthService implements IAuthService {
 
   async createJWTWithEmailAndPassword(aEmail: string, aPassword: string): Promise<AuthDTO> {
     const lCustomer = await this.mCustomerRepository.findByEmail(aEmail);
+    if (lCustomer == null) throw new BusinessRuleException("Email or Password is invalid");
     const lCheckedPassword = !(await EncryptionUtil.compare(aPassword, lCustomer.password));
-    if (lCheckedPassword) throw new BusinessRuleException("Password entered is invalid");
+    if (lCheckedPassword) throw new BusinessRuleException("Email or Password is invalid");
     const lPayload = { sub: Number(lCustomer.id_customer), username: lCustomer.email };
 
     return {
+      id_customer : Number(lCustomer.id_customer),
       access_token: await this.mJwtService.signAsync(lPayload)
     };
   }

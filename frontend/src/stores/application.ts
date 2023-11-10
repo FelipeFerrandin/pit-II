@@ -1,24 +1,31 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { ProductDTO } from "@/domains/product/ProductDTO";
+import { CustomerDTO } from "@/domains/customer/CustomerDTO";
 
 export const useApplicationStore = defineStore("application", {
   state: () => ({
     token: ref(""),
-    isLogged: ref(true),
+    isLogged: ref(false),
     cartList: ref([] as ProductDTO[]),
     totalCart: 0.0,
     snackbarVisible: ref(false),
-    messageSnackBar: ref("")
+    messageSnackBar: ref(""),
+    customer: ref(new CustomerDTO())
   }),
 
   getters: {
     getIsLogged(state) {
-      // return state.isLogged && state.token && localStorage.getItem("token");
-      return state.isLogged;
+      state.token = this.getToken;
+      return !["", null, undefined].includes(state.token);
     },
     getToken(state) {
+      state.token = localStorage.getItem("token")!;
       return state.token;
+    },
+    getCustomer(state): CustomerDTO {
+      state.customer = JSON.parse(localStorage.getItem("customer")!);
+      return state.customer;
     },
     getCartList(state): ProductDTO[] {
       state.cartList = JSON.parse(localStorage.getItem("cart")!);
@@ -41,6 +48,7 @@ export const useApplicationStore = defineStore("application", {
       this.isLogged = false;
       localStorage.removeItem("token");
       localStorage.removeItem("cart");
+      localStorage.removeItem("customer");
     },
 
     login(aToken: string) {
@@ -49,6 +57,12 @@ export const useApplicationStore = defineStore("application", {
       this.isLogged = true;
       localStorage.setItem("token", aToken);
       localStorage.setItem("cart", JSON.stringify([]));
+      localStorage.setItem("customer", JSON.stringify(null));
+    },
+
+    setCustomer(aCustomerDTO: CustomerDTO) {
+      this.customer = aCustomerDTO;
+      localStorage.setItem("customer", JSON.stringify(aCustomerDTO));
     },
 
     addItemCart(aQuantity: number, aMaxQuantity: number, aProductDTO: ProductDTO) {

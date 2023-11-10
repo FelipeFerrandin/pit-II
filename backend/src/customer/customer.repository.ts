@@ -16,7 +16,7 @@ export interface ICustomerRepository {
 
   delete(aIdCustomer: number): Promise<Customer>;
 
-  findByEmail(aEmail: string): Promise<Customer>;
+  findByEmail(aEmail: string): Promise<Customer | null>;
 }
 
 @Injectable()

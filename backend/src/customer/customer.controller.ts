@@ -29,7 +29,7 @@ export class CustomerController {
 
   @Post()
   async create(@Body() aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO) {
-    return this.mCustomerService.createComplete(aCustomerCreateCompleteDTO);
+    await this.mCustomerService.createComplete(aCustomerCreateCompleteDTO);
   }
 
   @Post("/address/:aIdCustomer")
@@ -37,17 +37,17 @@ export class CustomerController {
     @Param("aIdCustomer") aIdCustomer: bigint,
     @Body() aCustomerAddressCreateDTO: CustomerAddressCreateDTO
   ) {
-    return this.mCustomerAddressService.create(aIdCustomer, aCustomerAddressCreateDTO);
+    await this.mCustomerAddressService.create(aIdCustomer, aCustomerAddressCreateDTO);
   }
 
   @Put()
   async update(@Body() aCustomerUpdateDTO: CustomerUpdateDTO) {
-    return this.mCustomerService.update(aCustomerUpdateDTO);
+    await this.mCustomerService.update(aCustomerUpdateDTO);
   }
 
   @Put("/address")
   async updateAddress(@Body() aCustomerAddressUpdateDTO: CustomerAddressUpdateDTO) {
-    return this.mCustomerAddressService.update(aCustomerAddressUpdateDTO);
+    await this.mCustomerAddressService.update(aCustomerAddressUpdateDTO);
   }
 
   @Put("/password/:aIdCustomer")
@@ -55,7 +55,7 @@ export class CustomerController {
     @Param("aIdCustomer") aIdCustomer: number,
     @Body() aCustomerUpdatePasswordDTO: CustomerUpdatePasswordDTO
   ) {
-    return this.mCustomerService.updatePassword(
+    await this.mCustomerService.updatePassword(
       aIdCustomer,
       aCustomerUpdatePasswordDTO.old_password,
       aCustomerUpdatePasswordDTO.new_password
@@ -64,12 +64,12 @@ export class CustomerController {
 
   @Delete("/:aIdCustomer")
   async deleteAccount(@Param("aIdCustomer") aIdCustomer: number) {
-    return this.mCustomerService.delete(aIdCustomer);
+    await this.mCustomerService.delete(aIdCustomer);
   }
 
   @Delete("/address/:aIdCustomerAddress")
   async deleteAddress(@Param("aIdCustomerAddress") aIdCustomerAddress: number) {
-    return this.mCustomerAddressService.delete(aIdCustomerAddress);
+    await this.mCustomerAddressService.delete(aIdCustomerAddress);
   }
 
 }

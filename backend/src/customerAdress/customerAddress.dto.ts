@@ -54,7 +54,7 @@ class CustomerAddressCreateDTO {
 
 class CustomerAddressDTO {
   id_customer_address: number;
-  id_customer: bigint;
+  id_customer: number;
   public_place: string;
   district: string;
   number: number;

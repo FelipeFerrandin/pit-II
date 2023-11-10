@@ -2,7 +2,7 @@ import { IsNotEmpty, MaxLength, Min, ValidateNested } from "class-validator";
 import { CustomerAddressCreateDTO } from "../customerAdress/customerAddress.dto";
 
 class CustomerDTO {
-  id_customer: bigint;
+  id_customer: number;
   name: string;
   last_name: string;
   complete_name: string;
