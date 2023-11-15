@@ -60,6 +60,13 @@ export const useApplicationStore = defineStore("application", {
       localStorage.setItem("customer", JSON.stringify(null));
     },
 
+    setToken(aToken: string){
+      if (["", undefined, null].includes(aToken)) throw Error("Token is invalid");
+      this.token = aToken;
+      this.isLogged = true;
+      localStorage.setItem("token", aToken);
+    },
+
     setCustomer(aCustomerDTO: CustomerDTO) {
       this.customer = aCustomerDTO;
       localStorage.setItem("customer", JSON.stringify(aCustomerDTO));

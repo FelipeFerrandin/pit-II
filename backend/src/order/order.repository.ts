@@ -12,6 +12,8 @@ export interface IOrderRepository {
   finish(aIdOrder: bigint): Promise<Order>;
 
   findFinishPendingOrders(): Promise<Order[]>;
+
+  findFinishOrders(aIdCustomer: number): Promise<Order[]>;
 }
 
 @Injectable()
@@ -62,6 +64,15 @@ export class OrderRepository implements IOrderRepository {
     return this.mPrismaDatabase.order.findMany({
       where: {
         status: OrderEnum.PENDENTE,
+        active: YesNo.Yes
+      }
+    });
+  }
+
+  async findFinishOrders(aIdCustomer: number): Promise<Order[]> {
+    return this.mPrismaDatabase.order.findMany({
+      where: {
+        id_customer: aIdCustomer,
         active: YesNo.Yes
       }
     });

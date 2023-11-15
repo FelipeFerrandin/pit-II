@@ -29,7 +29,6 @@ function getProductById() {
     lMaxQuantity.value = r.data.quantity;
   }).catch((e) => {
     lStore.showSnackbar(e.data);
-    console.error(e);
   });
 }
 

@@ -12,7 +12,6 @@ function listProducts() {
     lProducts.value = r.data;
   }).catch((e) => {
     lStore.showSnackbar(e.data);
-    console.error(e);
   });
 }
 

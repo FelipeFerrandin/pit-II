@@ -1,12 +1,98 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useApplicationStore } from "@/stores/application";
+import OrderHTTPAPI from "@/domains/order/OrderHTTPAPI";
+import type { OrderCreateProductsDTO } from "@/domains/order/OrderDTO";
+import { useRouter } from "vue-router";
+import CustomerHTTPAPI from "@/domains/customer/CustomerHTTPAPI";
+import type { CustomerAddressDTO } from "@/domains/customer/CustomerDTO";
+import { CustomerCreateCompleteDTO } from "@/domains/customer/CustomerDTO";
+import { AuthDTO, AuthLoginDTO } from "@/domains/auth/AuthDTO";
+import AuthHTTPAPI from "@/domains/auth/AuthHTTPAPI";
 
 const lStore = useApplicationStore();
 
 const lHasAccount = ref(true);
 const lCountries = ref(["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", `Timor L'Este`, "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"]);
-const lIsLogged = computed(() => lStore.isLogged);
+const lIsLogged = ref(lStore.getIsLogged);
+const lRouter = useRouter();
+const lCustomerAddress = ref([] as CustomerAddressDTO[]);
+const lAuthLoginDTO = ref(new AuthLoginDTO());
+const lCreateCustomer = ref(new CustomerCreateCompleteDTO());
+const lIsCreating = ref(false);
+
+async function createOrder() {
+  if (lStore.getCartList.length == 0) throw Error("To complete the order, you must have items in the cart.");
+
+  new OrderHTTPAPI().createOrder(lStore.getCustomer.id_customer, {
+    id_customer_address: lCustomerAddress.value[0].id_customer_address,
+    products: lStore.getCartList.map((iItem) => <OrderCreateProductsDTO>{
+      id_product: iItem.id_product,
+      quantity: iItem.quantity
+    })
+  }).then((r) => {
+    lStore.finishOrder();
+    lStore.showSnackbar("Order placed successfully");
+    lRouter.push({ path: "/" });
+  }).catch((e) => {
+    lStore.showSnackbar(e.data);
+  });
+}
+
+function findCustomerAddress() {
+  new CustomerHTTPAPI().getCustomerAddressById(lStore.getCustomer.id_customer).then((r) => {
+    lCustomerAddress.value = r.data;
+  }).catch((e) => {
+    lStore.showSnackbar(e.data);
+  });
+}
+
+function createCustomer() {
+  new CustomerHTTPAPI().createCustomer(lCreateCustomer.value).then(r => {
+    setTimeout(() => {
+      auth({
+        email: lCreateCustomer.value.customer.email,
+        password: lCreateCustomer.value.customer.password
+      });
+    }, 1000);
+    lStore.showSnackbar("Customer created with success!!");
+  }).catch(e => {
+    lStore.showSnackbar(e.data);
+  }).finally(() => {
+  });
+}
+
+
+function login() {
+  auth(lAuthLoginDTO.value);
+}
+
+function auth(aAuthLogin: AuthLoginDTO) {
+  new AuthHTTPAPI().login(aAuthLogin).then((r) => {
+    const lAuthDTO: AuthDTO = r.data;
+    lIsLogged.value = true;
+    findCustomer(lAuthDTO.id_customer, lAuthDTO.access_token);
+  }).catch((e) => {
+    lStore.showSnackbar(e.data);
+  });
+}
+
+function findCustomer(aIdCustomer: number, aToken: string) {
+  new CustomerHTTPAPI().getCustomerById(aIdCustomer).then(r => {
+    lStore.setCustomer(r.data);
+    lStore.setToken(aToken);
+    findCustomerAddress();
+  }).catch(e => {
+    lStore.showSnackbar(e.data);
+  });
+}
+
+
+onMounted(() => {
+  if (lStore.getIsLogged) {
+    findCustomerAddress();
+  }
+});
 
 </script>
 
@@ -20,28 +106,37 @@ const lIsLogged = computed(() => lStore.isLogged);
 
         <section v-if="lHasAccount && !lIsLogged">
           <v-text-field
+            v-model="lAuthLoginDTO.email"
             label="Email"
+            type="email"
           ></v-text-field>
 
           <v-text-field
+            v-model="lAuthLoginDTO.password"
+            type="password"
             label="Password"
           ></v-text-field>
 
           <div>
-            <v-btn class="w-100 " variant="tonal">Login</v-btn>
+            <v-btn class="w-100 " variant="tonal" @click="login">Login</v-btn>
           </div>
         </section>
 
         <section v-if="!lHasAccount && !lIsLogged">
           <v-text-field
+            v-model="lCreateCustomer.customer.email"
             label="Email"
+            type="email"
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.customer.password"
+            type="password"
             label="Password"
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.customer.name"
             label="First name"
             :rules="[
                   value => !!value || 'Required.',
@@ -51,6 +146,7 @@ const lIsLogged = computed(() => lStore.isLogged);
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.customer.last_name"
             label="Last name"
             :rules="[
                   value => !!value || 'Required.',
@@ -60,12 +156,14 @@ const lIsLogged = computed(() => lStore.isLogged);
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.customer.birth_date"
             type="date"
             label="Birth date"
             required
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.customer.phone_number"
             label="Phone"
             :rules="[
                   value => !!value || 'Required.',
@@ -79,6 +177,7 @@ const lIsLogged = computed(() => lStore.isLogged);
           </v-card-title>
 
           <v-text-field
+            v-model="lCreateCustomer.address.public_place"
             label="Public place"
             :rules="[
                   value => !!value || 'Required.',
@@ -88,6 +187,7 @@ const lIsLogged = computed(() => lStore.isLogged);
           ></v-text-field>
 
           <v-text-field
+            v-model="lCreateCustomer.address.district"
             label="District"
             :rules="[
                   value => !!value || 'Required.',
@@ -97,25 +197,18 @@ const lIsLogged = computed(() => lStore.isLogged);
           ></v-text-field>
 
           <v-text-field
+            v-model.number="lCreateCustomer.address.number"
             label="Number"
             :rules="[
-                  value => !!value || 'Required.',
-                  value => (value || '').length <= 4 || 'Max 4 characters'
+                  value => !!value || 'Required.'
                 ]"
             required
           ></v-text-field>
 
-          <v-text-field
-            label="Number"
-            :rules="[
-                  value => !!value || 'Required.',
-                  value => (value || '').length <= 4 || 'Max 4 characters'
-                ]"
-            required
-          ></v-text-field>
 
           <v-text-field
             label="City"
+            v-model="lCreateCustomer.address.city"
             :rules="[
                   value => !!value || 'Required.',
                   value => (value || '').length <= 100 || 'Max 100 characters'
@@ -125,6 +218,7 @@ const lIsLogged = computed(() => lStore.isLogged);
 
           <v-text-field
             label="State"
+            v-model="lCreateCustomer.address.state"
             :rules="[
                   value => !!value || 'Required.',
                   value => (value || '').length <= 100 || 'Max 100 characters'
@@ -134,47 +228,15 @@ const lIsLogged = computed(() => lStore.isLogged);
 
           <v-autocomplete
             ref="country"
+            v-model="lCreateCustomer.address.country"
             :rules="[value => !!value || 'This field is required']"
             :items="lCountries"
             label="Country"
             placeholder="Select..."
             required
           ></v-autocomplete>
-
-
-          <v-card-title>
-            Payment info
-          </v-card-title>
-
-          <v-text-field
-            label="Credit card number"
-            :rules="[
-                  value => !!value || 'Required.',
-                  value => (value || '').length <= 19 || 'Max 19 characters'
-                ]"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            label="Expiration Date"
-            :rules="[
-                  value => !!value || 'Required.',
-                  value => (value || '').length <= 5 || 'Max 5 characters'
-                ]"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            label="Card Verification Number"
-            :rules="[
-                  value => !!value || 'Required.',
-                  value => (value || '').length <= 4 || 'Max 4 characters'
-                ]"
-            required
-          ></v-text-field>
-
           <div>
-            <v-btn class="w-100 " variant="tonal">Finish</v-btn>
+            <v-btn class="w-100" variant="tonal" @click="createCustomer" :loading="lIsCreating">Finish</v-btn>
           </div>
         </section>
 
@@ -211,7 +273,7 @@ const lIsLogged = computed(() => lStore.isLogged);
           ></v-text-field>
 
           <div>
-            <v-btn class="w-100 " variant="tonal">Finish</v-btn>
+            <v-btn class="w-100 " variant="tonal" @click="createOrder">Finish</v-btn>
           </div>
         </section>
 

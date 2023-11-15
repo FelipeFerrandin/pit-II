@@ -36,7 +36,7 @@ onMounted(() => {
           @click="this.$router.push('/account');"
           prepend-icon="mdi-account-outline"
           title="My account"
-          subtitle="Felipe"
+          :subtitle="lStore.getCustomer.name"
         ></v-list-item>
 
         <v-list-item

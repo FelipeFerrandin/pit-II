@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { IOrderProductRepository } from "./orderProduct.repository";
 import { order_product as OrderProduct } from "@prisma/client";
+import { OrderProductCreateDTO, OrderProductDTO } from "./orderProduct.dto";
 
 
 export interface IOrderProductService {

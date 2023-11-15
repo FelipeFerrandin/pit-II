@@ -4,6 +4,7 @@ import type { CustomerDTO } from "@/domains/customer/CustomerDTO";
 import {
   CustomerAddressDTO,
   CustomerAddressUpdateDTO,
+  CustomerCreateCompleteDTO,
   CustomerUpdateDTO,
   CustomerUpdatePasswordDTO
 } from "@/domains/customer/CustomerDTO";
@@ -21,6 +22,10 @@ export default class CustomerHTTPAPI {
 
   public getCustomerAddressById(aIdCustomer: number): Promise<AxiosResponse<CustomerAddressDTO[]>> {
     return this.httpProvider.axiosInstanceBase.get(`/customer/list-address/${aIdCustomer}`);
+  }
+
+  public createCustomer(aCustomerCreateCompleteDTO: CustomerCreateCompleteDTO) {
+    return this.httpProvider.axiosInstanceBase.post(`/customer`, aCustomerCreateCompleteDTO);
   }
 
   public updateCustomer(aCustomerUpdateDTO: CustomerUpdateDTO) {

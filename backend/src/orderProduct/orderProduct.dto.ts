@@ -11,3 +11,19 @@ class OrderProductDTO {
   subtotal: number;
   quantity: number;
 }
+
+class OrderProductCustomizedDTO {
+  id_order_product: number;
+  id_product: number;
+  name: string;
+  description: string;
+  image_base64: string;
+  subtotal: number;
+  quantity: number;
+}
+
+export {
+  OrderProductDTO,
+  OrderProductCreateDTO,
+  OrderProductCustomizedDTO
+};

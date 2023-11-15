@@ -43,7 +43,32 @@ class CustomerAddressUpdateDTO {
   country: string = "";
 }
 
+
+class CustomerCreateCompleteDTO {
+  customer = new CustomerCreateDTO();
+  address = new CustomerAddressCreateDTO();
+}
+
+class CustomerCreateDTO {
+  name: string = "";
+  last_name: string = "";
+  email: string = "";
+  password: string = "";
+  birth_date: string = "";
+  phone_number: string = "";
+}
+
+class CustomerAddressCreateDTO {
+  public_place: string = "";
+  district: string = "";
+  number: number = 0;
+  city: string = "";
+  state: string = "";
+  country: string = "";
+}
+
 export {
+  CustomerCreateCompleteDTO,
   CustomerAddressUpdateDTO,
   CustomerAddressDTO,
   CustomerUpdatePasswordDTO,

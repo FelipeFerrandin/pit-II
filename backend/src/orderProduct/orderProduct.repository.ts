@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../framework/database/PrismaService";
 import { order_product as OrderProduct } from "@prisma/client";
+import { OrderProductCreateDTO } from "./orderProduct.dto";
 
 export interface IOrderProductRepository {
   create(aIdOrder: bigint, aOrderProductCreateDTO: OrderProductCreateDTO): Promise<OrderProduct>;
