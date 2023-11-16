@@ -28,7 +28,7 @@ function updateCustomer() {
     findCustomer(lCustomer.value.id_customer);
     lStore.showSnackbar("Customer changed successfully!!");
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -36,7 +36,7 @@ function findCustomer(aIdCustomer: number) {
   new CustomerHTTPAPI().getCustomerById(aIdCustomer).then(r => {
     lStore.setCustomer(r.data);
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -49,7 +49,7 @@ function updatePassword() {
     lPassword.value.new_password = "";
     lStore.showSnackbar("Password changed successfully!!");
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -57,7 +57,7 @@ function findCustomerAddress() {
   new CustomerHTTPAPI().getCustomerAddressById(lCustomer.value.id_customer).then(r => {
     lCustomerAddress.value = r.data[0];
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -73,7 +73,7 @@ function updateCustomerAddress() {
   }).then(r => {
     lStore.showSnackbar("Address changed successfully!!");
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 

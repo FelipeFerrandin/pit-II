@@ -27,7 +27,7 @@ function auth(aAuthLogin: AuthLoginDTO) {
     findCustomer(lAuthDTO.id_customer);
     lRouter.push({ path: "/account" });
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -35,7 +35,7 @@ function findCustomer(aIdCustomer: number) {
   new CustomerHTTPAPI().getCustomerById(aIdCustomer).then(r => {
     lStore.setCustomer(r.data);
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -50,7 +50,7 @@ function createCustomer() {
     }, 1000);
     lStore.showSnackbar("Customer created with success!!");
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
     lIsCreating.value = false;
   }).finally(() => {
     lIsCreating.value = false;

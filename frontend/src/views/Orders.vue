@@ -11,7 +11,7 @@ function getFinishOrders() {
   new OrderHTTPAPI().getFinishOrders(lStore.getCustomer.id_customer).then((r) => {
     lOrderListDTO.value = r.data;
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 

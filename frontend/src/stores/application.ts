@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { ProductDTO } from "@/domains/product/ProductDTO";
 import { CustomerDTO } from "@/domains/customer/CustomerDTO";
+import ErrorHandling from "@/framework/error/ErrorHandling";
 
 export const useApplicationStore = defineStore("application", {
   state: () => ({
@@ -60,7 +61,7 @@ export const useApplicationStore = defineStore("application", {
       localStorage.setItem("customer", JSON.stringify(null));
     },
 
-    setToken(aToken: string){
+    setToken(aToken: string) {
       if (["", undefined, null].includes(aToken)) throw Error("Token is invalid");
       this.token = aToken;
       this.isLogged = true;
@@ -102,9 +103,12 @@ export const useApplicationStore = defineStore("application", {
       localStorage.setItem("cart", JSON.stringify(this.cartList));
     },
 
-    showSnackbar(aMessage: string) {
+    showSnackbar(aMessage: any) {
       this.snackbarVisible = true;
-      this.messageSnackBar = aMessage;
+      this.messageSnackBar = ErrorHandling.process(aMessage);
+      setTimeout(() => {
+        this.snackbarVisible = false;
+      }, 3000);
     },
 
     closeSnackBar() {

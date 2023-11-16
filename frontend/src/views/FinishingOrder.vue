@@ -35,7 +35,7 @@ async function createOrder() {
     lStore.showSnackbar("Order placed successfully");
     lRouter.push({ path: "/" });
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -43,7 +43,7 @@ function findCustomerAddress() {
   new CustomerHTTPAPI().getCustomerAddressById(lStore.getCustomer.id_customer).then((r) => {
     lCustomerAddress.value = r.data;
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -57,7 +57,7 @@ function createCustomer() {
     }, 1000);
     lStore.showSnackbar("Customer created with success!!");
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   }).finally(() => {
   });
 }
@@ -73,7 +73,7 @@ function auth(aAuthLogin: AuthLoginDTO) {
     lIsLogged.value = true;
     findCustomer(lAuthDTO.id_customer, lAuthDTO.access_token);
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
@@ -83,7 +83,7 @@ function findCustomer(aIdCustomer: number, aToken: string) {
     lStore.setToken(aToken);
     findCustomerAddress();
   }).catch(e => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 

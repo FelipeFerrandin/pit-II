@@ -28,7 +28,7 @@ function getProductById() {
     lProduct.value = r.data;
     lMaxQuantity.value = r.data.quantity;
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 

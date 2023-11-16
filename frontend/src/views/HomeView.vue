@@ -11,7 +11,7 @@ function listProducts() {
   new ProductHttpAPI().listProducts().then((r) => {
     lProducts.value = r.data;
   }).catch((e) => {
-    lStore.showSnackbar(e.data);
+    lStore.showSnackbar(e);
   });
 }
 
