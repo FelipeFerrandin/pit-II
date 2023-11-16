@@ -33,7 +33,7 @@ async function createOrder() {
   }).then((r) => {
     lStore.finishOrder();
     lStore.showSnackbar("Order placed successfully");
-    lRouter.push({ path: "/" });
+    lRouter.push({ name: "home" });
   }).catch((e) => {
     lStore.showSnackbar(e);
   });

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { useApplicationStore } from "@/stores/application";
+import { useRouter } from "vue-router";
 
 const lStore = useApplicationStore();
 
@@ -15,6 +16,11 @@ function formatDecimal(aValue: number, aLocale: string = "pt-BR"): string {
     maximumFractionDigits: 2
   });
   return lFormatter.format(aValue);
+}
+const lRouter = useRouter();
+
+function goTo(aRouteName: string) {
+  lRouter.push({ name: aRouteName });
 }
 
 </script>
@@ -85,7 +91,7 @@ function formatDecimal(aValue: number, aLocale: string = "pt-BR"): string {
               </v-card-subtitle>
 
               <div class="w-100" v-if="lStore.getCartList.length > 0">
-                <v-btn class="w-100" variant="tonal" @click="this.$router.push('/finishing-order');">Finish</v-btn>
+                <v-btn class="w-100" variant="tonal" @click="goTo('finishing-order');">Finish</v-btn>
               </div>
             </div>
           </v-card>

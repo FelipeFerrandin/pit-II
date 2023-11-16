@@ -3,6 +3,7 @@ import OrderHTTPAPI from "@/domains/order/OrderHTTPAPI";
 import { useApplicationStore } from "@/stores/application";
 import { onMounted, ref } from "vue";
 import { OrderListDTO } from "@/domains/order/OrderDTO";
+import { useRouter } from "vue-router";
 
 const lStore = useApplicationStore();
 const lOrderListDTO = ref([] as OrderListDTO[]);
@@ -28,12 +29,16 @@ onMounted(() => {
   getFinishOrders();
 });
 
+const lRouter = useRouter();
 
+function goTo(aRouteName: string) {
+  lRouter.push({ name: aRouteName });
+}
 </script>
 
 <template>
 
-  <v-btn variant="text" icon="mdi-arrow-left" @click="this.$router.push('/account');" class="ml-2 mt-2"></v-btn>
+  <v-btn variant="text" icon="mdi-arrow-left" @click="goTo('account');" class="ml-2 mt-2"></v-btn>
 
   <main>
     <v-container>

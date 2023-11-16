@@ -1,4 +1,12 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+
+const lRouter = useRouter();
+
+function goTo(aRouteName: string) {
+  lRouter.push({ name: aRouteName });
+}
+
 
 </script>
 
@@ -17,7 +25,7 @@
               class="ml-auto"
               variant="outlined"
               size="small"
-              @click="this.$router.push('/orders');"
+              @click="goTo('orders');"
             >
               view
             </v-btn>
@@ -36,7 +44,7 @@
               class="ml-auto"
               variant="outlined"
               size="small"
-              @click="this.$router.push('/info-account');"
+              @click="goTo('info-account');"
             >
               go to
             </v-btn>

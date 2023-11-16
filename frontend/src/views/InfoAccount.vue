@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useApplicationStore } from "@/stores/application";
 import CustomerHTTPAPI from "@/domains/customer/CustomerHTTPAPI";
 import { CustomerAddressDTO, CustomerUpdatePasswordDTO } from "@/domains/customer/CustomerDTO";
+import { useRouter } from "vue-router";
 
 const lPasswordVisible = ref(false);
 const lNewPasswordVisible = ref(false);
@@ -14,6 +15,7 @@ const lCustomer = ref(lStore.getCustomer);
 const lCustomerAddress = ref(new CustomerAddressDTO());
 const lPassword = ref(new CustomerUpdatePasswordDTO());
 const lBirthDate = ref(lCustomer.value.birth_date.split("T")[0]);
+const lRouter = useRouter();
 
 function updateCustomer() {
   new CustomerHTTPAPI().updateCustomer(
@@ -81,10 +83,14 @@ onMounted(() => {
   findCustomerAddress();
 });
 
+function goTo(aRouteName: string) {
+  lRouter.push({ name: aRouteName });
+}
+
 </script>
 
 <template>
-  <v-btn variant="text" icon="mdi-arrow-left" @click="this.$router.push('/account');" class="ml-2 mt-2"></v-btn>
+  <v-btn variant="text" icon="mdi-arrow-left" @click="goTo('account');" class="ml-2 mt-2"></v-btn>
   <main>
     <v-container>
       <v-row>

@@ -14,9 +14,13 @@ function initLocalStorage() {
   }
 }
 
+function goTo(aRouteName: string) {
+  lRouter.push({ name: aRouteName });
+}
+
 function logout() {
   lStore.logout();
-  lRouter.push({ path: "/" });
+  lRouter.push({ name: "home" });
 }
 
 onMounted(() => {
@@ -33,7 +37,7 @@ onMounted(() => {
         <v-list-item
           v-if="lIsLogged"
           link
-          @click="this.$router.push('/account');"
+          @click="goTo('account');"
           prepend-icon="mdi-account-outline"
           title="My account"
           :subtitle="lStore.getCustomer.name"
@@ -42,7 +46,7 @@ onMounted(() => {
         <v-list-item
           v-if="!lIsLogged"
           link
-          @click="this.$router.push('/login');"
+          @click="goTo('login');"
           prepend-icon="mdi-account-outline"
           title="Login"
           subtitle="Register"
@@ -69,10 +73,10 @@ onMounted(() => {
     <v-app-bar>
       <v-app-bar-nav-icon icon="mdi-menu" color="grey-lighten-5"
                           @click="lDrawerVisible = !lDrawerVisible"></v-app-bar-nav-icon>
-      <v-app-bar-title @click="this.$router.push('/');" style="cursor: pointer">Cupcake</v-app-bar-title>
+      <v-app-bar-title @click="goTo('home');" style="cursor: pointer">Cupcake</v-app-bar-title>
       <v-spacer></v-spacer>
       <template v-slot:append>
-        <v-btn icon="mdi-cart-outline" @click="this.$router.push('/cart');"></v-btn>
+        <v-btn icon="mdi-cart-outline" @click="goTo('cart');"></v-btn>
       </template>
     </v-app-bar>
 
