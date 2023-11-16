@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Inject, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Post, UseGuards } from "@nestjs/common";
 import { IOrderService } from "./order.service";
 import { OrderCreateDTO } from "./order.dto";
+import { AuthGuard } from "../framework/util/AuthGuard";
 
 @Controller("order")
+@UseGuards(AuthGuard)
 export class OrderController {
   constructor(
     @Inject("IOrderService") private readonly mOrderService: IOrderService
