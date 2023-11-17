@@ -3,6 +3,7 @@ import ProductHttpAPI from "@/domains/product/ProductHttpAPI";
 import { onMounted, ref } from "vue";
 import type { ProductDTO } from "@/domains/product/ProductDTO";
 import { useApplicationStore } from "@/stores/application";
+import { useRouter } from "vue-router";
 
 const lProducts = ref([] as ProductDTO[]);
 const lStore = useApplicationStore();
@@ -24,6 +25,11 @@ function formatDecimal(aValue: number, aLocale: string = "pt-BR"): string {
   return lFormatter.format(aValue);
 }
 
+const lRouter = useRouter();
+
+function goToInfo(aRouteName: string, aParam: string) {
+  lRouter.push({ name: aRouteName, params: { id: aParam } });
+}
 
 onMounted(() => {
   listProducts();
@@ -36,7 +42,7 @@ onMounted(() => {
     <v-container>
       <v-row>
         <v-col v-for="iProduct in lProducts" :key="iProduct.id_product" cols="12" xs="12" sm="12" md="6" lg="4">
-          <v-card link :href="`/info/${iProduct.id_product}`">
+          <v-card link @click="goToInfo('info', iProduct.id_product.toString())">
             <v-card height="200">
               <v-img
                 width="100%"
