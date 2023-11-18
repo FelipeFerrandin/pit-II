@@ -16,7 +16,6 @@ async function bootstrap() {
   //Compress
   lApp.use(compression())
 
-
-  await lApp.listen(3000);
+  await lApp.listen(process.env.PORT_APPLICATION);
 }
 bootstrap();

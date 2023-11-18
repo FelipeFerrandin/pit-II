@@ -7,8 +7,12 @@ import { ProductModule } from "./product/product.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { OrderModule } from "./order/order.module";
 import { AuthModule } from "./auth/auth.module";
+import { HealthController } from "./health.controller";
 
 @Module({
+  controllers: [
+    HealthController
+  ],
   imports: [
     ScheduleModule.forRoot(),
     PrismaModule,
