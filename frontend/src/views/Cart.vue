@@ -2,6 +2,7 @@
 
 import { useApplicationStore } from "@/stores/application";
 import { useRouter } from "vue-router";
+import { watch } from "vue";
 
 const lStore = useApplicationStore();
 
@@ -17,11 +18,27 @@ function formatDecimal(aValue: number, aLocale: string = "pt-BR"): string {
   });
   return lFormatter.format(aValue);
 }
+
 const lRouter = useRouter();
 
 function goTo(aRouteName: string) {
   lRouter.push({ name: aRouteName });
 }
+
+function arrayItems(aMaxQuantity: number) {
+
+  let arrayRegressive = [];
+
+  for (let i = aMaxQuantity || 0; i >= 1; i--) {
+    arrayRegressive.push(i);
+  }
+
+  return arrayRegressive.sort((a, b) => a - b);
+}
+
+watch(lStore.getCartList, () => {
+  lStore.updateCartList();
+}, { deep: true });
 
 </script>
 
@@ -44,17 +61,32 @@ function goTo(aRouteName: string) {
                   <v-img :src="iProduct.image_base64"></v-img>
                 </v-avatar>
 
-                <div class="w-50">
+                <div style="width: 80%">
                   <v-card-title class="text-h5">
                     {{ iProduct.name }}
                   </v-card-title>
 
                   <v-card-subtitle>
-                    <span>{{ iProduct.description }}</span>
+                    <span :title="iProduct.description">{{ iProduct.description }}</span>
                   </v-card-subtitle>
 
-                  <v-card-subtitle class="mt-1">
-                    <span>Quantity: {{ iProduct.quantity }}</span>
+                  <v-card-subtitle class="mt-2">
+                    <div class="d-flex">
+                      <v-select
+                        v-model="iProduct.quantity"
+                        :items="arrayItems(iProduct.max_quantity)"
+                        @change="updateCartInformation"
+                        class="w-25"
+                        density="compact"
+                        label="Quantity"
+                      ></v-select>
+
+                      <span
+                        class="w-75 my-auto ml-4 pb-5">R$ {{
+                          formatDecimal(iProduct.quantity * iProduct.price)
+                        }} </span>
+
+                    </div>
                   </v-card-subtitle>
 
                 </div>
