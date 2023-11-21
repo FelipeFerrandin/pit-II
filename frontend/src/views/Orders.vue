@@ -42,6 +42,10 @@ function goTo(aRouteName: string) {
 
   <main>
     <v-container>
+      <section v-if="lOrderListDTO.length == 0">
+        <v-card class="pa-3" title="No orders placed"></v-card>
+      </section>
+
       <v-expansion-panels>
         <v-expansion-panel
           v-for="iOrderListDTO in lOrderListDTO"

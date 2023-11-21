@@ -14,7 +14,6 @@ export class CustomerController {
   }
 
   @Get("/:aIdCustomer")
-  @UseGuards(AuthGuard)
   async findById(@Param("aIdCustomer") aIdCustomer: number) {
     return this.mCustomerService.findById(aIdCustomer);
   }
