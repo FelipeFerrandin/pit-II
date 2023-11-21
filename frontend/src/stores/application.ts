@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { ProductDTO } from "@/domains/product/ProductDTO";
+import { ProductCartDTO, ProductDTO } from "@/domains/product/ProductDTO";
 import { CustomerDTO } from "@/domains/customer/CustomerDTO";
 import ErrorHandling from "@/framework/error/ErrorHandling";
 
@@ -8,7 +8,7 @@ export const useApplicationStore = defineStore("application", {
   state: () => ({
     token: ref(""),
     isLogged: ref(false),
-    cartList: ref([] as ProductDTO[]),
+    cartList: ref([] as ProductCartDTO[]),
     totalCart: 0.0,
     snackbarVisible: ref(false),
     messageSnackBar: ref(""),
@@ -28,7 +28,7 @@ export const useApplicationStore = defineStore("application", {
       state.customer = JSON.parse(localStorage.getItem("customer")!);
       return state.customer;
     },
-    getCartList(state): ProductDTO[] {
+    getCartList(state): ProductCartDTO[] {
       state.cartList = JSON.parse(localStorage.getItem("cart")!);
       return state.cartList;
     },
@@ -82,7 +82,15 @@ export const useApplicationStore = defineStore("application", {
         lListProducts[lProductIndex].quantity += aQuantity;
       } else {
         aProductDTO.quantity = aQuantity;
-        lListProducts.push(aProductDTO);
+        lListProducts.push({
+          id_product: aProductDTO.id_product,
+          name: aProductDTO.name,
+          price: aProductDTO.price,
+          description: aProductDTO.description,
+          quantity: aProductDTO.quantity,
+          max_quantity: aMaxQuantity,
+          image_base64: aProductDTO.image_base64
+        });
       }
 
       localStorage.setItem("cart", JSON.stringify(lListProducts));
@@ -113,6 +121,10 @@ export const useApplicationStore = defineStore("application", {
 
     closeSnackBar() {
       this.snackbarVisible = false;
+    },
+
+    updateCartList(){
+      localStorage.setItem("cart", JSON.stringify(this.getCartList))
     }
   }
 });
