@@ -29,7 +29,6 @@ export class CustomerService implements ICustomerService {
   constructor(
     @Inject("ICustomerRepository") private readonly mCustomerRepository: ICustomerRepository,
     @Inject("ICustomerAddressService") private readonly mCustomerAddressService: ICustomerAddressService,
-    @Inject("IAuthService") private readonly mAuthService: IAuthService,
     private readonly mTransactionManager: TransactionManager
   ) {
   }
