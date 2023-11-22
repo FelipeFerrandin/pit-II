@@ -10,7 +10,7 @@ export default class HttpProvider {
 
   private static createAxiosInstanceBase() {
     const instance = axios.create({
-      baseURL: "http://18.229.138.251:8080",
+      baseURL: "http://54.94.55.207:8080",
       headers: {
         "Content-Type": "application/json"
       }
